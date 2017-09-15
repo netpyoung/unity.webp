@@ -36,7 +36,7 @@ This project is based on the work of:
 
 # LICENCE
 
-## Sqlite
+## webp
 ![webp](webplogo.png)
 * BSD
 
