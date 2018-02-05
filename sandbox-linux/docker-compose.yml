@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  libwebp32:
+    build: ./32
+    volumes:
+      - './output32/:/root/output/'
+  libwebp64:
+    build: ./64
+    volumes:
+      - './output64/:/root/output/'
