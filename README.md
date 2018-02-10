@@ -3,7 +3,7 @@
 
  This project was based in [octo-code/webp-unity3d](https://github.com/octo-code/webp-unity3d).
 
- I decided that there should be a simpler way and I created **unity.webp**, a plugin that helps you to use [webp](https://developers.google.com/speed/webp/) in your Unity3d projects in a clear and easy way and works in **iOS, Android and Windows** projects.
+ I decided that there should be a simpler way and I created **unity.webp**, a plugin that helps you to use [webp](https://developers.google.com/speed/webp/) in your Unity3d projects in a clear and easy way and works in **iOS, Android, Windows, Linux** projects.
 
 
 # Watchout
@@ -13,7 +13,7 @@
 # The fast track
  All you have to do to start using it in your project:
 
-1. [Download this .unitypackage](https://github.com/netpyoung/unity.webp/raw/master/webp-0.0.1.unitypackage), extract its content on your Unity3D Project. It contains the dlls that Unity3d will need to access sqlite.
+1. [Download this .unitypackage](https://github.com/netpyoung/unity.webp/raw/master/webp-0.0.1.unitypackage), extract its content on your Unity3D Project. It contains the dlls that Unity3d will need to access webp.
 4. **You’re done!**
 
 
