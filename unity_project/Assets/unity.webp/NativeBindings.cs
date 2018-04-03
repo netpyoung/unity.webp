@@ -666,7 +666,7 @@ namespace WebP.Extern
 		#elif UNITY_ANDROID
 		const string DLL_NAME = "webp";
 		#elif UNITY_IOS
-		const string DLL_NAME = DLL_NAME;
+		const string DLL_NAME = "__Internal";
 		#endif
 
         /// Return Type: int
