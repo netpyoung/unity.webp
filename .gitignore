@@ -26,3 +26,5 @@ sysinfo.txt
 /libwebp*/
 /libwebp*.tar.gz
 .idea/
+
+.DS_Store

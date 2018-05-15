@@ -7,10 +7,10 @@ DIR_LIBWEBP=${ROOT}/libwebp
 
 
 # [src] libwebp
-wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-0.6.1.tar.gz && tar xf libwebp-0.6.1.tar.gz
+wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.0.0.tar.gz && tar xf libwebp-1.0.0.tar.gz
 
 # compile
-cd libwebp-0.6.1 && ./configure && make && make install
+cd libwebp-1.0.0 && ./configure && make && make install
 
 mkdir -p ${DIR_DEST}
 
