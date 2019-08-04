@@ -31,7 +31,7 @@ public class Example : MonoBehaviour {
 	void LoadOrigin(RawImage image) {
 		var textasset = Resources.Load<TextAsset> ("origin");
 		var bytes = textasset.bytes;
-		var texture = new Texture2D(512, 512, TextureFormat.RGBA32, mipmap: false, linear: false);
+		var texture = new Texture2D(512, 512, TextureFormat.RGBA32, mipChain: false, linear: false);
 		texture.LoadImage (bytes);
 		image.texture = texture;
 	}
