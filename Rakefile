@@ -48,22 +48,47 @@ end
 
 desc "update library_android"
 task :update_library_android do
+  # android-ndk: https://developer.android.com/ndk/downloads
   ANDROID_MK = 'Android.mk'
 
-  Dir.chdir(LIBWEBP) do
-    # to enable build shared library
-    File.open(ANDROID_MK, "r") do |orig|
-      File.unlink(ANDROID_MK)
-      File.open(ANDROID_MK, "w") do |new|
-        new.puts 'ENABLE_SHARED := 1'
-        new.write(orig.read())
+  build_dir = 'build/android'
+  lib_armeabi_v7a_dir = "#{GIT_ROOT}/lib/android/armeabi-v7a"
+  lib_x86_dir = "#{GIT_ROOT}/lib/android/x86"
+  lib_x86_64_dir = "#{GIT_ROOT}/lib/android/x86_64"
+  lib_arm64_v8a_dir  = "#{GIT_ROOT}/lib/android/arm64-v8a"
+
+  FileUtils.mkdir_p(build_dir) unless File.directory?(build_dir)
+  FileUtils.mkdir_p(lib_x86_dir) unless File.directory?(lib_x86_dir)
+  FileUtils.mkdir_p(lib_armeabi_v7a_dir) unless File.directory?(lib_armeabi_v7a_dir)
+  FileUtils.mkdir_p(lib_arm64_v8a_dir) unless File.directory?(lib_arm64_v8a_dir)
+  FileUtils.mkdir_p(lib_x86_64_dir) unless File.directory?(lib_x86_64_dir)
+
+  Dir.chdir(build_dir) do
+    sh 'git clone https://github.com/webmproject/libwebp.git'
+
+    Dir.chdir('libwebp') do
+      sh "git checkout #{VERSION}"
+
+      # to enable build shared library
+      File.open(ANDROID_MK, "r") do |orig|
+        # File.unlink(ANDROID_MK)
+        o = orig.read()
+        File.open(ANDROID_MK, "w") do |new|
+          new.puts 'ENABLE_SHARED := 1'
+          new.write(o)
+        end
+      end
+
+      NDK_BUILD_FPATH = "#{Dir.home}/android-ndk-r20/ndk-build"
+      sh "#{NDK_BUILD_FPATH} NDK_PROJECT_PATH=#{Dir.pwd} APP_BUILD_SCRIPT=#{Dir.pwd}/#{ANDROID_MK}"
+
+      ['libwebp.so', 'libwebpdecoder.so', 'libwebpdemux.so', 'libwebpmux.so'].each do |so|
+        cp_r "libs/armeabi-v7a/#{so}", lib_armeabi_v7a_dir
+        cp_r "libs/arm64-v8a/#{so}", lib_arm64_v8a_dir
+        cp_r "libs/x86/#{so}", lib_x86_dir
+        cp_r "libs/x86_64/#{so}", lib_x86_64_dir
       end
     end
-
-    NDK_BUILD_FPATH = "#{Dir.home}/android-ndk-r17/ndk-build"
-    sh "#{NDK_BUILD_FPATH} NDK_PROJECT_PATH=#{Dir.pwd} APP_BUILD_SCRIPT=#{Dir.pwd}/#{ANDROID_MK}"
-    cp_r "libs/armeabi-v7a/libwebp.so", "#{GIT_ROOT}/unity_project/Assets/unity.webp/Plugins/Android/libs/armeabi-v7a/libwebp.so"
-    cp_r "libs/x86/libwebp.so", "#{GIT_ROOT}/unity_project/Assets/unity.webp/Plugins/Android/libs/x86/libwebp.so"
   end
 end
 
@@ -84,10 +109,24 @@ end
 
 desc "update library_windows"
 task :update_library_windows do
-  # // %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  url = "https://s3.amazonaws.com/resizer-dynamic-downloads/webp/#{VERSION}/x86_64/libwebp.dll"
-  output_fpath = "#{GIT_ROOT}/unity_project/Assets/unity.webp/Plugins/x64/webp.dll"
-  sh "curl #{url} --output #{output_fpath}"
+  # Windows + R
+  # %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+  build_dir = 'build/win_64'
+  lib_dir = "#{GIT_ROOT}/lib/win_64"
+
+  FileUtils.mkdir_p(build_dir) unless File.directory?(build_dir)
+  FileUtils.mkdir_p(lib_dir) unless File.directory?(lib_dir)
+  Dir.chdir(build_dir) do
+    sh 'git clone https://github.com/webmproject/libwebp.git'
+    Dir.chdir('libwebp') do
+      sh "git checkout #{VERSION}"
+      sh 'nmake /f Makefile.vc CFG=release-dynamic RTLIBCFG=dynamic OBJDIR=output'
+    end
+    cp 'libwebp/output/release-dynamic/x64/bin/libwebp.dll', lib_dir
+    cp 'libwebp/output/release-dynamic/x64/bin/libwebpdecoder.dll', lib_dir
+    cp 'libwebp/output/release-dynamic/x64/bin/libwebpdemux.dll', lib_dir
+  end
 end
 
 
