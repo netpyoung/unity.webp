@@ -173,6 +173,29 @@ namespace WebP
 			return lRawData;
 		}
 
+        public static unsafe List<byte[]> LoadRGBAsFromWebP(byte[] lData, ref int lWidth, ref int lHeight, bool lMipmaps, out Error lError, ScalingFunction scalingFunction = null)
+        {
+            List<byte[]> bytes_list = new List<byte[]>();
+            lError = 0;
+            byte[] lRawData = null;
+            int lLength = lData.Length;
+
+            WebPAnimDecoderOptions config = new WebPAnimDecoderOptions();
+            fixed (byte* p = lData)
+            {
+                IntPtr ptr = (IntPtr)p;
+                var webpdata = new WebPData
+                {
+                    bytes = ptr,
+                    size = new UIntPtr((uint)lLength)
+                };
+                //NativeBindings.WebPDataInit(ref webpdata);
+            }
+
+            
+            return bytes_list;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -197,6 +220,28 @@ namespace WebP
             }
 
             return lTexture2D;
+        }
+
+        public static unsafe Texture2D[] CreateTextures2DFromWebP(byte[] lData, bool lMipmaps, bool lLinear, out Error lError, ScalingFunction scalingFunction = null)
+        {
+            lError = 0;
+            List<Texture2D> lTexture2Ds = new List<Texture2D>();
+            int lWidth = 0, lHeight = 0;
+
+            GetWebPDimensions(lData, out lWidth, out lHeight);
+
+            Debug.Log($"{lWidth} {lHeight}");
+            List<byte[]> lRawDatas = LoadRGBAsFromWebP(lData, ref lWidth, ref lHeight, lMipmaps, out lError, scalingFunction);
+
+            //if (lError == Error.Success)
+            //{
+            //    Texture2D lTexture2D= new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
+            //    lTexture2D.LoadRawTextureData(lRawData);
+            //    lTexture2D.Apply(lMipmaps, true);
+            //    lTexture2Ds.Add(lTexture2D);
+            //}
+
+            return lTexture2Ds.ToArray();
         }
 
         /// <summary>

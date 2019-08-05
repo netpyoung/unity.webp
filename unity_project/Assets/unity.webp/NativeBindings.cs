@@ -1246,7 +1246,6 @@ namespace WebP.Extern
         [DllImportAttribute(DLL_NAME, EntryPoint = "WebPEncode")]
         public static extern int WebPEncode(ref WebPConfig config, ref WebPPicture picture);
 		#endregion NATIVE_WRAPPERS
-
         // Some useful macros:
 
         /// <summary>
