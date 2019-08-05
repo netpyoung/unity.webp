@@ -660,9 +660,10 @@ namespace WebP.Extern
         #region NATIVE_WRAPPERS
 
 
-  
-		#if UNITY_EDITOR
-		const string DLL_NAME = "webp";
+        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        const string DLL_NAME = "libwebp";
+        #elif UNITY_EDITOR
+        const string DLL_NAME = "webp";
 		#elif UNITY_ANDROID
 		const string DLL_NAME = "webp";
 		#elif UNITY_IOS

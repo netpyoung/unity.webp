@@ -84,6 +84,7 @@ end
 
 desc "update library_windows"
 task :update_library_windows do
+  # // %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   url = "https://s3.amazonaws.com/resizer-dynamic-downloads/webp/#{VERSION}/x86_64/libwebp.dll"
   output_fpath = "#{GIT_ROOT}/unity_project/Assets/unity.webp/Plugins/x64/webp.dll"
   sh "curl #{url} --output #{output_fpath}"

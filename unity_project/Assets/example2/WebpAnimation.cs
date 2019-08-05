@@ -1,25 +1,48 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using WebP;
 using WebP.Extern;
 
-// %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-public class WebpAnimation : MonoBehaviour {
+public class WebpAnimation : MonoBehaviour
+{
 	public RawImage image2;
 
-	void Start()
-	{
-		LoadWebp (image2);
-	}
-
-    unsafe void LoadWebp (RawImage image)
+    async void Start()
     {
-		var textasset = Resources.Load<TextAsset> ("butterfly_small");
-		var bytes = textasset.bytes;
+        List<(Texture2D, int)> lst = LoadAnimation(image2);
+        int prevTimestamp = 0;
+        for (int i = 0; i < lst.Count; ++i)
+        {
+            (Texture2D, int) x = lst[i];
+            Texture2D texture = x.Item1;
+            int timestamp = x.Item2;
+            if (image2 == null)
+            {
+                break;
+            }
+            image2.texture = texture;
+            int delay = timestamp - prevTimestamp;
+            prevTimestamp = timestamp;
+            if (delay < 0)
+            {
+                delay = 0;
+            }
+            await Task.Delay(delay);
+            if (i == lst.Count - 1)
+            {
+                i = -1;
+            }
+        }
+    }
+
+    unsafe List<ValueTuple<Texture2D, int>> LoadAnimation(RawImage image)
+    {
+        List<ValueTuple<Texture2D, int>> ret = new List<ValueTuple<Texture2D, int>>();
+
+        TextAsset textasset = Resources.Load<TextAsset>("butterfly_small");
+        byte[] bytes = textasset.bytes;
         WebPAnimDecoderOptions option = new WebPAnimDecoderOptions
         {
             use_threads = 1,
@@ -29,7 +52,7 @@ public class WebpAnimation : MonoBehaviour {
         fixed (byte* p = bytes)
         {
             IntPtr ptr = (IntPtr)p;
-            var webpdata = new WebPData
+            WebPData webpdata = new WebPData
             {
                 bytes = ptr,
                 size = new UIntPtr((uint)bytes.Length)
@@ -37,48 +60,27 @@ public class WebpAnimation : MonoBehaviour {
             IntPtr dec = libwebpdemux.WebPAnimDecoderNew(ref webpdata, ref option);
             WebPAnimInfo anim_info = new WebPAnimInfo();
             libwebpdemux.WebPAnimDecoderGetInfo(dec, ref anim_info);
-            
+
             Debug.LogWarning($"{anim_info.frame_count} {anim_info.canvas_width}/{anim_info.canvas_height}");
-            //for (int i = 0; i < anim_info.frame_count; ++i)
-            //{
 
+            int size = anim_info.canvas_width * 4 * anim_info.canvas_height;
+            IntPtr unmanagedPointer = new IntPtr();
+            int timestamp = 0;
+            for (int i = 0; i < anim_info.frame_count; ++i)
             {
-                byte[] arr = new byte[anim_info.canvas_width * 4 * anim_info.canvas_height];
-                //byte[] clear = new byte[anim_info.canvas_width * 4 * anim_info.canvas_height];
-
-                IntPtr unmanagedPointer = new IntPtr(); //Marshal.AllocHGlobal(arr.Length);
-
-                int timestamp = 0;
-
-                //while (libwebpdemux.WebPAnimDecoderHasMoreFrames(dec))
-                //{
-                    var result = libwebpdemux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
-                Debug.LogWarning($"result: {result}");
-                //Marshal.Copy(unmanagedPointer, arr, 0, arr.Length);
-                //Marshal.FreeHGlobal(unmanagedPointer);
-
-                Debug.Log($"{timestamp} - {arr.Length}");
-                {
-                    int lWidth = anim_info.canvas_width;
-                    int lHeight = anim_info.canvas_height;
-                    Texture2D lTexture2D;
-                    bool lMipmaps = false;
-                    bool lLinear = false;
-                    lTexture2D = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
-                    //lTexture2D.LoadRawTextureData(arr);
-                    lTexture2D.LoadRawTextureData(unmanagedPointer, arr.Length);
-                    lTexture2D.Apply();// .Apply(lMipmaps, true);
-                    image2.texture = lTexture2D;
-                }
+                int result = libwebpdemux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
+                int lWidth = anim_info.canvas_width;
+                int lHeight = anim_info.canvas_height;
+                bool lMipmaps = false;
+                bool lLinear = false;
+                Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
+                texture.LoadRawTextureData(unmanagedPointer, size);
+                texture.Apply();
+                ret.Add(ValueTuple.Create(texture, timestamp));
             }
-            //}
-
             libwebpdemux.WebPAnimDecoderReset(dec);
-            //}
-            //IntPtr demuxer = libwebpdemux.WebPAnimDecoderGetDemuxer(dec);
             libwebpdemux.WebPAnimDecoderDelete(dec);
-
-
         }
+        return ret;
     }
 }
