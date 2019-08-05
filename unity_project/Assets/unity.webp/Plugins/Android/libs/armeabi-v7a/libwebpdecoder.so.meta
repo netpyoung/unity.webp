@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f9a83d1646cee774091d2d3903926844
+guid: 96a241c1fdebb094591cc2f0ec3a2513
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -28,8 +28,7 @@ PluginImporter:
       Android: Android
     second:
       enabled: 1
-      settings:
-        CPU: x86
+      settings: {}
   - first:
       Any: 
     second:
@@ -40,9 +39,7 @@ PluginImporter:
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
         DefaultValueInitialized: true
-        OS: AnyOS
   - first:
       Facebook: Win
     second:
