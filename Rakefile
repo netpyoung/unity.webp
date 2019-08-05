@@ -11,9 +11,22 @@ end
 
 desc "install webp"
 task :install_webp do
-  sh "curl https://storage.googleapis.com/downloads.webmproject.org/releases/webp/#{LIBWEBP}.tar.gz -o #{LIBWEBP}.tar.gz"
-  sh "tar xvf #{LIBWEBP}.tar.gz"
-  sh "cd #{LIBWEBP} && ./configure && make && make install"
+  sh 'git clone https://github.com/webmproject/libwebp.git'
+  Dir.chdir('libwebp') do
+    #sh "curl https://storage.googleapis.com/downloads.webmproject.org/releases/webp/#{LIBWEBP}.tar.gz -o #{LIBWEBP}.tar.gz"
+    #sh "tar xvzf #{LIBWEBP}.tar.gz"
+    #sh "cd #{LIBWEBP} && ./configure && make && make install"
+    #brew automake autoconf libtool
+
+    # ref: http://www.linuxfromscratch.org/blfs/view/svn/general/libwebp.html
+    # ./configure --enable-everything
+    # ./configure --help
+
+    sh "git checkout #{VERSION}"
+    sh './autogen.sh'
+    sh "./configure --prefix=`pwd`/.lib --enable-everything --disable-static"
+    sh 'make && make install'
+  end
 end
 
 
