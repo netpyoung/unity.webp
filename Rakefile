@@ -151,7 +151,7 @@ end
 
 desc "package"
 task :package do
-  UNITY = '/Applications/Unity/Unity.app/Contents/MacOS/Unity'
+  UNITY = '/Applications/Unity/Hub/Editor/2019.1.10f1/Unity.app/Contents/MacOS/Unity'
   UNITY_PRJ_DIR = "#{GIT_ROOT}/unity_project"
   UNITY_PACKAGE_METHOD = 'PackageTool.UpdatePackage'
 
