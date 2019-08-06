@@ -57,7 +57,7 @@ namespace WebP.Extern
         const int WEBP_DEMUX_ABI_VERSION = 0x0107;
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         const string DLL_NAME = "libwebpdemux";
-#elif UNITY_EDITOR
+#elif UNITY_EDITOR || UNITY_STANDALONE_OSX
         const string DLL_NAME = "webpdemux";
 #elif UNITY_ANDROID
 		const string DLL_NAME = "webpdemux";
