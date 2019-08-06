@@ -8,40 +8,33 @@ task :default do
   sh 'rake -T'
 end
 
-
-desc "install webp"
-task :install_webp do
-  sh 'git clone https://github.com/webmproject/libwebp.git'
-  Dir.chdir('libwebp') do
-    #sh "curl https://storage.googleapis.com/downloads.webmproject.org/releases/webp/#{LIBWEBP}.tar.gz -o #{LIBWEBP}.tar.gz"
-    #sh "tar xvzf #{LIBWEBP}.tar.gz"
-    #sh "cd #{LIBWEBP} && ./configure && make && make install"
-    #brew automake autoconf libtool
-
-    # ref: http://www.linuxfromscratch.org/blfs/view/svn/general/libwebp.html
-    # ./configure --enable-everything
-    # ./configure --help
-
-    sh "git checkout #{VERSION}"
-    sh './autogen.sh'
-    sh "./configure --prefix=`pwd`/.lib --enable-everything --disable-static"
-    sh 'make && make install'
-  end
-end
-
-
 desc "sample image"
 task :sample_image do
   cp_r 'Lenna.png', "#{GIT_ROOT}/unity_project/Assets/Resources/origin.bytes"
-
   sh "cwebp -q 80 Lenna.png -o #{GIT_ROOT}/unity_project/Assets/Resources/webp.bytes"
 end
 
+desc "update library_macos"
+task :update_library_macos do
+  build_dir = 'build/macos'
+  lib_dir = "#{GIT_ROOT}/lib/macos_64"
 
-desc "update library_osx"
-task :update_library_osx do
-  Dir.chdir(LIBWEBP) do
-    cp_r `realpath src/.libs/libwebp.dylib`.strip, "#{GIT_ROOT}/unity_project/Assets/unity.webp/Plugins/x64/webp.bundle"
+  FileUtils.mkdir_p(build_dir) unless File.directory?(build_dir)
+  FileUtils.mkdir_p(lib_dir) unless File.directory?(lib_dir)
+
+  Dir.chdir(build_dir) do
+    sh 'git clone https://github.com/webmproject/libwebp.git'
+    Dir.chdir('libwebp') do
+      sh "git checkout #{VERSION}"
+      sh './autogen.sh'
+      sh "./configure --prefix=`pwd`/.lib --enable-everything --disable-static"
+      sh 'make && make install'
+    end
+
+    cp_r `realpath libwebp/.lib/lib/libwebp.dylib`.strip, lib_dir
+    cp_r `realpath libwebp/.lib/lib/libwebpdecoder.dylib`.strip, lib_dir
+    cp_r `realpath libwebp/.lib/lib/libwebpdemux.dylib`.strip, lib_dir
+    cp_r `realpath libwebp/.lib/lib/libwebpmux.dylib`.strip, lib_dir
   end
 end
 
