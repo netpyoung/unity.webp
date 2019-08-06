@@ -95,14 +95,33 @@ end
 
 desc "update library_ios"
 task :update_library_ios do
+  build_dir = 'build/ios'
+  lib_dir  = "#{GIT_ROOT}/lib/ios-universal"
+  lib_simulator_dir  = "#{GIT_ROOT}/lib/ios-simulator"
+  version = '12.4'
 
-  Dir.chdir(LIBWEBP) do
-    sh "./iosbuild.sh"
+  FileUtils.mkdir_p(build_dir) unless File.directory?(build_dir)
+  FileUtils.mkdir_p(lib_dir) unless File.directory?(lib_dir)
+  FileUtils.mkdir_p(lib_simulator_dir) unless File.directory?(lib_simulator_dir)
+  Dir.chdir(build_dir) do
+    sh 'git clone https://github.com/webmproject/libwebp.git'
 
-    # universal static library
-    sh "lipo -create -output libwebp.a iosbuild/iPhoneOS-10.3-aarch64/lib/libwebp.a iosbuild/iPhoneOS-10.3-armv7/lib/libwebp.a"
+    Dir.chdir('libwebp') do
+      sh "git checkout #{VERSION}"
+      sh "./iosbuild.sh"
 
-    cp_r "libwebp.a", "#{GIT_ROOT}/unity_project/Assets/unity.webp/Plugins/iOS/libwebp.a"
+      # universal static library
+      ['libwebp.a', 'libwebpdecoder.a', 'libwebpdemux.a'].each do |a|
+        sh "lipo -create -output #{a} iosbuild/iPhoneOS-#{version}-aarch64/lib/#{a} iosbuild/iPhoneOS-#{version}-armv7/lib/#{a}"
+        cp_r a, lib_dir
+      end
+
+      # simulator static library
+      ['libwebp.a', 'libwebpdecoder.a', 'libwebpdemux.a'].each do |a|
+        # sh "lipo -create -output #{a} iosbuild/iPhoneSimulator-#{version}-x86_64/lib/#{a} iosbuild/iPhoneSimulator-#{version}-i386/lib/#{a}"
+        cp_r "iosbuild/iPhoneSimulator-#{version}-x86_64/lib/#{a}", lib_simulator_dir
+      end
+    end
   end
 end
 
