@@ -660,9 +660,10 @@ namespace WebP.Extern
         #region NATIVE_WRAPPERS
 
 
-  
-		#if UNITY_EDITOR
-		const string DLL_NAME = "webp";
+        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        const string DLL_NAME = "libwebp";
+        #elif UNITY_EDITOR || UNITY_STANDALONE_OSX
+        const string DLL_NAME = "webp";
 		#elif UNITY_ANDROID
 		const string DLL_NAME = "webp";
 		#elif UNITY_IOS
@@ -1246,7 +1247,6 @@ namespace WebP.Extern
         [DllImportAttribute(DLL_NAME, EntryPoint = "WebPEncode")]
         public static extern int WebPEncode(ref WebPConfig config, ref WebPPicture picture);
 		#endregion NATIVE_WRAPPERS
-
         // Some useful macros:
 
         /// <summary>

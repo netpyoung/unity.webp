@@ -34,6 +34,9 @@ This project is based on the work of:
  - android-ndk-r15c-darwin-x86_64.zip
 
 
+# Demo
+![animation.webp](./animation.webp)
+
 # LICENCE
 
 ## webp
