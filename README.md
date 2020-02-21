@@ -13,7 +13,7 @@
 # The fast track
  All you have to do to start using it in your project:
 
-1. [Download this .unitypackage](https://github.com/netpyoung/unity.webp/raw/master/webp-0.0.3.unitypackage), extract its content on your Unity3D Project. It contains the dlls that Unity3d will need to access webp.
+1. [Download this .unitypackage from Release Page](https://github.com/netpyoung/unity.webp/releases), extract its content on your Unity3D Project. It contains the dlls that Unity3d will need to access webp.
 4. **You’re done!**
 
 
