@@ -86,7 +86,7 @@ namespace WebP.Extern
 
         //         void WebPDemuxReleaseIterator(WebPIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxReleaseIterator")]
-        public static extern void WebPDemuxReleaseIterator(IntPtr dec);
+        public static extern void WebPDemuxReleaseIterator(ref WebPIterator dec);
 
         // WEBP_EXTERN void WebPDemuxReleaseChunkIterator(WebPChunkIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxReleaseChunkIterator")]
