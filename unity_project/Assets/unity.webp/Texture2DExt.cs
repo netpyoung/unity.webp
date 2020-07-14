@@ -161,13 +161,13 @@ namespace WebP
 					config.output.width = lWidth;
 					config.output.is_external_memory = 1;
 
-					// Decode
-					result = NativeBindings.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
-					if (result != VP8StatusCode.VP8_STATUS_OK)
-					{
-						throw new Exception(string.Format("Failed WebPDecode with error {0}.", result.ToString()));
-					}
-				}
+                    // Decode
+                    result = NativeBindings.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
+                    if (result != VP8StatusCode.VP8_STATUS_OK)
+                    {
+                        throw new Exception(string.Format("Failed WebPDecode with error {0}.", result.ToString()));
+                    }
+                }
 				lError = Error.Success;
 			}
 			return lRawData;

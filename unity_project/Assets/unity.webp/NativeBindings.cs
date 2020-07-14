@@ -201,30 +201,13 @@ namespace WebP.Extern
         /// </summary>
         public int has_alpha;
 
-        /// <summary>
-        /// Unused for now - should be 0
-        /// </summary>
-        public int bitstream_version;
-
-        /// <summary>
-        /// If true, incremental decoding is not reccomended
-        /// </summary>
-        public int no_incremental_decoding;
-
-        /// <summary>
-        /// Unused, should be 0 for now
-        /// </summary>
-        public int rotate;
-
-        /// <summary>
-        /// Unused, should be 0 for now
-        /// </summary>
-        public int uv_sampling;
+        public int has_animation;  // True if the bitstream is an animation.
+        public int format;         // 0 = undefined (/mixed), 1 = lossy, 2 = lossless
 
         /// <summary>
         /// Padding for later use
         /// </summary>
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 3, ArraySubType = UnmanagedType.U4)]
+        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 5, ArraySubType = UnmanagedType.U4)]
         public uint[] pad;
     }
 
@@ -236,13 +219,12 @@ namespace WebP.Extern
         public int no_fancy_upsampling;            // if true, use faster pointwise upsampler
         public int use_cropping;                   // if true, cropping is applied _first_
         public int crop_left, crop_top;            // top-left position for cropping.
-        // Will be snapped to even values.
+                                                   // Will be snapped to even values.
         public int crop_width, crop_height;        // dimension of the cropping area
         public int use_scaling;                    // if true, scaling is applied _afterward_
         public int scaled_width, scaled_height;    // final resolution
         public int use_threads;                    // if true, use multi-threaded decoding
         public int dithering_strength;             // dithering strength (0=Off, 100=full)
-
         public int flip;                           // flip output vertically
         public int alpha_dithering_strength;       // alpha dithering strength in [0..100]
         /// uint32_t[5]
@@ -659,15 +641,15 @@ namespace WebP.Extern
         #region NATIVE_WRAPPERS
 
 
-        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         const string DLL_NAME = "libwebp";
-        #elif UNITY_EDITOR || UNITY_STANDALONE_OSX
+#elif UNITY_EDITOR || UNITY_STANDALONE_OSX
         const string DLL_NAME = "webp";
-		#elif UNITY_ANDROID
+#elif UNITY_ANDROID
 		const string DLL_NAME = "webp";
-		#elif UNITY_IOS
+#elif UNITY_IOS
 		const string DLL_NAME = "__Internal";
-		#endif
+#endif
 
         /// Return Type: int
         [DllImportAttribute(DLL_NAME, EntryPoint = "WebPGetDecoderVersion")]
@@ -961,6 +943,9 @@ namespace WebP.Extern
         ///data_size: size_t->unsigned int
         ///config: WebPDecoderConfig*
         [DllImportAttribute(DLL_NAME, EntryPoint = "WebPDecode")]
+        public static extern VP8StatusCode WebPDecode([InAttribute()] IntPtr data, UIntPtr data_size, IntPtr config);
+
+        [DllImportAttribute(DLL_NAME, EntryPoint = "WebPDecode")]
         public static extern VP8StatusCode WebPDecode([InAttribute()] IntPtr data, UIntPtr data_size, ref WebPDecoderConfig config);
 
 
@@ -1245,7 +1230,7 @@ namespace WebP.Extern
         ///picture: WebPPicture*
         [DllImportAttribute(DLL_NAME, EntryPoint = "WebPEncode")]
         public static extern int WebPEncode(ref WebPConfig config, ref WebPPicture picture);
-		#endregion NATIVE_WRAPPERS
+        #endregion NATIVE_WRAPPERS
         // Some useful macros:
 
         /// <summary>

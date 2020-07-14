@@ -12,7 +12,7 @@ public class WebpAnimation : MonoBehaviour
 
     async void Start()
     {
-        List<(Texture2D, int)> lst = LoadAnimation("butterfly_small");
+        List<(Texture2D, int)> lst = LoadAnimation("cat");
 
         int prevTimestamp = 0;
         for (int i = 0; i < lst.Count; ++i)

@@ -66,7 +66,7 @@ namespace Game
                 return false;
             }
 
-            texture = new Texture2D(width, height, TextureFormat.RGBA32, false, false);
+            texture = new Texture2D(width, height, TextureFormat.RGBA32, mipChain: false, linear: false);
             try
             {
                 texture.LoadRawTextureData(bytes);

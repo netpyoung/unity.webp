@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
-using WebP;
 using WebP.Extern;
 
 namespace WebP

@@ -54,7 +54,7 @@ namespace WebP.Extern
 
     public class libwebpdemux
     {
-        const int WEBP_DEMUX_ABI_VERSION = 0x0107;
+        public const int WEBP_DEMUX_ABI_VERSION = 0x0107;
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         const string DLL_NAME = "libwebpdemux";
 #elif UNITY_EDITOR || UNITY_STANDALONE_OSX
@@ -104,13 +104,16 @@ namespace WebP.Extern
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxNextFrame")]
         public static extern int WebPDemuxNextFrame(IntPtr webpIterator);
 
+        [DllImport(DLL_NAME, EntryPoint = "WebPDemuxNextFrame")]
+        public static extern int WebPDemuxNextFrame(ref WebPIterator iter);
+
         // WEBP_EXTERN int WebPDemuxNextChunk(WebPChunkIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxNextChunk")]
         public static extern int WebPDemuxNextChunk(IntPtr webpChunkIterator);
 
         // WEBP_EXTERN WebPDemuxer* WebPDemuxInternal(const WebPData*, int, WebPDemuxState*, int);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxInternal")]
-        public static extern int WebPDemuxInternal(IntPtr webpdata, int a, IntPtr state, int version);
+        public static extern IntPtr WebPDemuxInternal(IntPtr webpdata, int a, IntPtr state, int version);
 
         // WEBP_EXTERN uint32_t WebPDemuxGetI(const WebPDemuxer* dmux, WebPFormatFeature feature);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxGetI")]
@@ -119,6 +122,7 @@ namespace WebP.Extern
         // WEBP_EXTERN int WebPDemuxGetFrame(const WebPDemuxer* dmux, int frame_number, WebPIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxGetFrame")]
         public static extern int WebPDemuxGetFrame(IntPtr demux, int frame_number, ref WebPIterator iter);
+        //public static extern int WebPDemuxGetFrame(IntPtr demux, int frame_number, IntPtr iter);
 
         // WEBP_EXTERN int WebPDemuxGetChunk(const WebPDemuxer* dmux, const char fourcc[4], int chunk_number, WebPChunkIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxGetChunk")]
