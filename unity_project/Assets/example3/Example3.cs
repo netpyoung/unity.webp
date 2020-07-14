@@ -1,20 +1,22 @@
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Example3 : MonoBehaviour
 {
-    async void Start() 
+    async void Start()
     {
         // remote file loading
-        await LoadWebP('https://www.example.com/path/to/webp.webp');
+        await LoadWebP("https://www.example.com/path/to/webp.webp");
 
         // project related absolute path loading(can be found by File.ReadAllBytes)
-        await LoadWebP(Path.Combine(Application.streamingAssetsPath, 'webp.webp'));
+        await LoadWebP(Path.Combine(Application.streamingAssetsPath, "webp.webp"));
     }
 
-    private async void LoadWebP(string url)
+    private async Task LoadWebP(string url)
     {
-        var renderer = await WebP.LoadTexturesAsync(url);
+        var renderer = await WebP.WebP.LoadTexturesAsync(url);
         if (renderer != null)
         {
             renderer.OnRender += texture => OnWebPRender(texture, url);

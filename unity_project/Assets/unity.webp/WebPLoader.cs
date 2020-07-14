@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Core;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace WebP
 {
@@ -26,7 +26,7 @@ namespace WebP
             Debug.Log($"[WebP] Try loading WebP file: {url}");
 
             byte[] bytes = null;
-            
+
             if (url.Contains("//") || url.Contains("///"))
             {
                 var www = await LoadAsync(url);
@@ -46,7 +46,7 @@ namespace WebP
 
             return bytes;
         }
-        
+
         /// <summary>
         /// Example for async UnityWebRequest
         /// 
@@ -55,13 +55,13 @@ namespace WebP
         /// </summary>
         private static async Task<UnityWebRequest> LoadAsync(string path)
         {
-            var www = new Unity.UnityWebRequest(path);
+            var www = new UnityWebRequest(path);
             var op = www.SendWebRequest();
             while (!op.isDone)
             {
                 await Task.Delay(1000 / 60);
             }
-            return req;
+            return www;
         }
 
     }

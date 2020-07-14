@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using WebP.Extern;
 
 namespace WebP
 {
@@ -9,7 +10,8 @@ namespace WebP
     {
         public static string GetDecoderVersion()
         {
-            uint v = (uint)WebP.Extern.NativeBindings.WebPGetDecoderVersion();
+            
+            uint v = (uint)NativeBindings.WebPGetDecoderVersion();
             var revision = v % 256;
             var minor = (v >> 8) % 256;
             var major = (v >> 16) % 256;
@@ -18,7 +20,7 @@ namespace WebP
 
         public static string GetEncoderVersion()
         {
-            uint v = (uint)WebP.Extern.NativeBindings.WebPGetEncoderVersion();
+            uint v = (uint)NativeBindings.WebPGetEncoderVersion();
             var revision = v % 256;
             var minor = (v >> 8) % 256;
             var major = (v >> 16) % 256;

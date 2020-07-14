@@ -1,5 +1,8 @@
-namespace WebP {
-    
+using System;
+using System.Runtime.InteropServices;
+
+namespace WebP
+{
     [StructLayoutAttribute(LayoutKind.Sequential)]
     public struct WebPIterator
     {
@@ -29,7 +32,7 @@ namespace WebP {
         WEBP_MUX_DISPOSE_NONE, // Do not dispose.
         WEBP_MUX_DISPOSE_BACKGROUND // Dispose to background color.
     }
-    
+
     [StructLayoutAttribute(LayoutKind.Sequential)]
     public struct WebPData
     {
@@ -41,7 +44,8 @@ namespace WebP {
 
     // Blend operation (animation only). Indicates how transparent pixels of the
     // current frame are blended with those of the previous canvas.
-    public enum WebPMuxAnimBlend {
+    public enum WebPMuxAnimBlend
+    {
         WEBP_MUX_BLEND, // Blend.
         WEBP_MUX_NO_BLEND // Do not blend.
     }

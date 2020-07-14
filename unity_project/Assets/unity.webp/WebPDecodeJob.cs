@@ -66,10 +66,10 @@ namespace WebP
         public void Excute(int index)
         {
             // get the demuxer (which contains almost all the information about the WebP file)
-            var demuxer = WebP.Extern.libwebpdemux.WebPAnimDecoderGetDemuxer(_decoder);
+            var demuxer = libwebpdemux.WebPAnimDecoderGetDemuxer(_decoder);
             var iter = new WebPIterator();
             // use the demuxer and WebPIterator to extract one frame from the WebP data
-            var success = WebP.Extern.libwebpdemux.WebPDemuxGetFrame(demuxer, index + 1, ref iter);
+            var success = libwebpdemux.WebPDemuxGetFrame(demuxer, index + 1, ref iter);
             if (success == 0)
             {
                 Debug.LogError($"[WebPDecodeTask] Decode frame data {index} failed");
@@ -92,7 +92,7 @@ namespace WebP
             // if not using concurrent dict, exceptions may happen 
             _managedBytes?.TryAdd(index, (loadedBytes, iter.duration));
             // release the iterator pointer
-            WebP.Extern.libwebpdemux.WebPDemuxReleaseIterator(ref iter);
+            libwebpdemux.WebPDemuxReleaseIterator(ref iter);
         }
     }
 

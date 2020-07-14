@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using WebP;
 using WebP.Extern;
 
 namespace Game
@@ -25,10 +26,10 @@ namespace Game
             Debug.Log($"[WebPDecoderWrapper] Raw bytes decode complete");
 
             var textures = CreateTexturesFromBytes(decodedBytes, info.canvas_width, info.canvas_height);
-            
+
             // release the decoder
-            WebPDemuxBindings.WebPAnimDecoderReset(decoder);
-            WebPDemuxBindings.WebPAnimDecoderDelete(decoder);
+            libwebpdemux.WebPAnimDecoderReset(decoder);
+            libwebpdemux.WebPAnimDecoderDelete(decoder);
 
             return textures;
         }
@@ -88,22 +89,22 @@ namespace Game
 
             fixed (byte* p = bytes)
             {
-                var webpData = new WebPData
+                var webpData = new WebP.Extern.WebPData
                 {
                     bytes = (IntPtr) p,
                     size = (UIntPtr) bytes.Length
                 };
                 var options = new WebPAnimDecoderOptions
                 {
-                    flip = 1, 
+                    //flip = 1, 
                     use_threads = 1,
                     color_mode = WEBP_CSP_MODE.MODE_RGBA
                 };
 
-                decoder = WebPDemuxBindings.WebPAnimDecoderNew(ref webpData, ref options);
+                decoder = libwebpdemux.WebPAnimDecoderNew(ref webpData, ref options);
                 
                 info = new WebPAnimInfo();
-                var success = WebPDemuxBindings.WebPAnimDecoderGetInfo(decoder, ref info);
+                var success = libwebpdemux.WebPAnimDecoderGetInfo(decoder, ref info);
 
                 if (success == 0)
                 {

@@ -1,8 +1,6 @@
-using System.Diagnostics;
+using Game;
 using System.Threading.Tasks;
-// using FairyGUI;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace WebP
 {

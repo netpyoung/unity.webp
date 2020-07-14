@@ -118,7 +118,7 @@ namespace WebP.Extern
 
         // WEBP_EXTERN int WebPDemuxGetFrame(const WebPDemuxer* dmux, int frame_number, WebPIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxGetFrame")]
-        public static extern int WebPDemuxGetFrame(IntPtr demux, int frame_number, IntPtr iter);
+        public static extern int WebPDemuxGetFrame(IntPtr demux, int frame_number, ref WebPIterator iter);
 
         // WEBP_EXTERN int WebPDemuxGetChunk(const WebPDemuxer* dmux, const char fourcc[4], int chunk_number, WebPChunkIterator* iter);
         [DllImport(DLL_NAME, EntryPoint = "WebPDemuxGetChunk")]

@@ -243,9 +243,8 @@ namespace WebP.Extern
         public int use_threads;                    // if true, use multi-threaded decoding
         public int dithering_strength;             // dithering strength (0=Off, 100=full)
 
-        // Unused for now:
-        public int force_rotation;                 // forced rotation (to be applied _last_)
-        public int no_enhancement;                 // if true, discard enhancement layer
+        public int flip;                           // flip output vertically
+        public int alpha_dithering_strength;       // alpha dithering strength in [0..100]
         /// uint32_t[5]
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 5, ArraySubType = UnmanagedType.U4)]
         public uint[] pad;
