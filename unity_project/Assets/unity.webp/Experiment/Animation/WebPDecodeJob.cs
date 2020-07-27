@@ -17,31 +17,31 @@ namespace WebP.Experiment.Animation
     public static class WebPDecodeJob
     {
 
-        public static async Task<List<(byte[], int)>> StartJob(IntPtr decoder, int count)
+        public static Task<List<(byte[], int)>> StartJob(IntPtr decoder, int count)
         {
             Debug.Log($"[WebPDecodeJob] Starting multi-threading webp decode");
             var managedBytes = new ConcurrentDictionary<int, (byte[], int)>();
             var task = new WebPDecodeTask(decoder, managedBytes);
             var taskRef = GCHandle.Alloc(task);
-            var job = new WebPDecoderJob {Task = taskRef};
+            var job = new WebPDecoderJob { Task = taskRef };
             var handler = job.Schedule(count, 1);
             var handled = false;
-        
+
             while (!handled)
             {
                 handled = handler.IsCompleted;
             }
-            
+
             handler.Complete();
             taskRef.Free();
 
-            if (managedBytes.Count <= 0 || managedBytes.Values.Count <= 0) return new List<(byte[], int)>();
-            
+            if (managedBytes.Count <= 0 || managedBytes.Values.Count <= 0) return Task.FromResult(new List<(byte[], int)>());
+
             var sorted = managedBytes.OrderBy(kvp => kvp.Key).ToList().ConvertAll(kvp => kvp.Value);
-            return sorted;
+            return Task.FromResult(sorted);
         }
     }
-    
+
     internal interface IWebPDecodeTask
     {
         void Excute(int index);
@@ -58,7 +58,7 @@ namespace WebP.Experiment.Animation
             _managedBytes = managedBytes;
             _decoder = decoder;
         }
-        
+
         /// <summary>
         /// The actual decode process which make the magic happen
         /// </summary>
@@ -74,12 +74,12 @@ namespace WebP.Experiment.Animation
                 Debug.LogError($"[WebPDecodeTask] Decode frame data {index} failed");
                 return;
             }
-            
+
             // use native memory marshal to minimize the momory consumption from native memory to csharp managed memory
-            var size = (int) iter.fragment.size;
+            var size = (int)iter.fragment.size;
             var bytes = new byte[size];
             Marshal.Copy(iter.fragment.bytes, bytes, 0, size);
-            
+
             // parse the memory data (structured bitmap data) to texture bytes, which can be used to parse into Texture
             var loadedBytes = Texture2DExt.LoadRGBAFromWebP(bytes, ref iter.width, ref iter.height, false, out var error, null);
             if (error != Error.Success)
@@ -102,10 +102,10 @@ namespace WebP.Experiment.Animation
     {
 
         public GCHandle Task;
-        
+
         public void Execute(int index)
         {
-            var task = (IWebPDecodeTask) Task.Target;
+            var task = (IWebPDecodeTask)Task.Target;
             task?.Excute(index);
         }
     }

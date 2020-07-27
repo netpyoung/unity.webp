@@ -15,7 +15,7 @@ public class WebpAnimationFix : MonoBehaviour
     {
         //await LoadAnimation2("butterfly_small");
         //List<(Texture2D, int)> lst = LoadAnimation("cat");
-        List<(Texture2D, int)> lst = LoadAnimation("cat");
+        List<(Texture2D, int)> lst = LoadAnimation2("cat");
         //image2.texture = lst.First().Item1;
         //Debug.Log(lst.Count);
 
@@ -93,19 +93,6 @@ public class WebpAnimationFix : MonoBehaviour
 
                 Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
                 texture.LoadRawTextureData(unmanagedPointer, size);
-
-                //{// Flip updown.
-                //    // ref: https://github.com/netpyoung/unity.webp/issues/18
-                //    // ref: https://github.com/webmproject/libwebp/blob/master/src/demux/anim_decode.c#L309
-                //    Color[] pixels = texture.GetPixels();
-                //    Color[] pixelsFlipped = new Color[pixels.Length];
-                //    for (int y = 0; y < anim_info.canvas_height; y++)
-                //    {
-                //        Array.Copy(pixels, y * anim_info.canvas_width, pixelsFlipped, (anim_info.canvas_height - y - 1) * anim_info.canvas_width, anim_info.canvas_width);
-                //    }
-                //    texture.SetPixels(pixelsFlipped);
-                //}
-
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
                 ret.Add((texture, timestamp));
             }
@@ -147,8 +134,8 @@ public class WebpAnimationFix : MonoBehaviour
             Debug.Log($"webPAnimDecoderPtr = {webPAnimDecoderPtr}");
             WebPAnimDecoder decoder = (WebPAnimDecoder)Marshal.PtrToStructure(webPAnimDecoderPtr, typeof(WebPAnimDecoder));
 
-            int width = 400;
-            int height = 400;
+            //int width = 400;
+            //int height = 400;
             {
                 //config.input.has_alpha = 1;
                 //config.options.bypass_filtering = 1;
@@ -168,7 +155,6 @@ public class WebpAnimationFix : MonoBehaviour
             }
             decoder.config_ = config;
             Marshal.StructureToPtr(decoder, webPAnimDecoderPtr, true);
-            //IntPtr dec = libwebpdemux.WebPAnimDecoderNew(ref webpdata, ref option);
             IntPtr dec = webPAnimDecoderPtr;
             WebPAnimInfo anim_info = new WebPAnimInfo();
 

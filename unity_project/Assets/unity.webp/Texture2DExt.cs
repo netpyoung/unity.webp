@@ -1,11 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Runtime.InteropServices;
-
 using UnityEngine;
 using WebP.NativeWrapper.Dec;
-using WebP.NativeWrapper.Demux;
 
 namespace WebP
 {
@@ -106,14 +102,11 @@ namespace WebP
 
 			fixed (byte* lDataPtr = lData)
 			{
-				// If we've been supplied a function to alter the width and height, use that now.
-				if (scalingFunction != null)
-				{
-					scalingFunction(ref lWidth, ref lHeight);
-				}
-				
-				// If mipmaps are requested we need to create 1/3 more memory for the mipmaps to be generated in.
-				int numBytesRequired = lWidth * lHeight * 4;
+                // If we've been supplied a function to alter the width and height, use that now.
+                scalingFunction?.Invoke(ref lWidth, ref lHeight);
+
+                // If mipmaps are requested we need to create 1/3 more memory for the mipmaps to be generated in.
+                int numBytesRequired = lWidth * lHeight * 4;
 				if (lMipmaps)
 				{
 					numBytesRequired = Mathf.CeilToInt((numBytesRequired * 4.0f) / 3.0f);
@@ -172,29 +165,6 @@ namespace WebP
 			return lRawData;
 		}
 
-        public static unsafe List<byte[]> LoadRGBAsFromWebP(byte[] lData, ref int lWidth, ref int lHeight, bool lMipmaps, out Error lError, ScalingFunction scalingFunction = null)
-        {
-            List<byte[]> bytes_list = new List<byte[]>();
-            lError = 0;
-            byte[] lRawData = null;
-            int lLength = lData.Length;
-
-            WebPAnimDecoderOptions config = new WebPAnimDecoderOptions();
-            fixed (byte* p = lData)
-            {
-                IntPtr ptr = (IntPtr)p;
-                var webpdata = new WebPData
-                {
-                    bytes = ptr,
-                    size = new UIntPtr((uint)lLength)
-                };
-                //NativeBindings.WebPDataInit(ref webpdata);
-            }
-
-            
-            return bytes_list;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -203,13 +173,12 @@ namespace WebP
         /// <returns></returns>
 		public static unsafe Texture2D CreateTexture2DFromWebP(byte[] lData, bool lMipmaps, bool lLinear, out Error lError, ScalingFunction scalingFunction = null )
         {
-            lError = 0;
             Texture2D lTexture2D = null;
-            int lWidth = 0, lHeight = 0;
+            int lWidth;
+            int lHeight;
+            GetWebPDimensions(lData, out lWidth, out lHeight);
 
-			GetWebPDimensions(lData, out lWidth, out lHeight);
-
-			byte[] lRawData = LoadRGBAFromWebP(lData, ref lWidth, ref lHeight, lMipmaps, out lError, scalingFunction);
+            byte[] lRawData = LoadRGBAFromWebP(lData, ref lWidth, ref lHeight, lMipmaps, out lError, scalingFunction);
 
             if (lError == Error.Success)
             {
@@ -219,28 +188,6 @@ namespace WebP
             }
 
             return lTexture2D;
-        }
-
-        public static unsafe Texture2D[] CreateTextures2DFromWebP(byte[] lData, bool lMipmaps, bool lLinear, out Error lError, ScalingFunction scalingFunction = null)
-        {
-            lError = 0;
-            List<Texture2D> lTexture2Ds = new List<Texture2D>();
-            int lWidth = 0, lHeight = 0;
-
-            GetWebPDimensions(lData, out lWidth, out lHeight);
-
-            Debug.Log($"{lWidth} {lHeight}");
-            List<byte[]> lRawDatas = LoadRGBAsFromWebP(lData, ref lWidth, ref lHeight, lMipmaps, out lError, scalingFunction);
-
-            //if (lError == Error.Success)
-            //{
-            //    Texture2D lTexture2D= new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
-            //    lTexture2D.LoadRawTextureData(lRawData);
-            //    lTexture2D.Apply(lMipmaps, true);
-            //    lTexture2Ds.Add(lTexture2D);
-            //}
-
-            return lTexture2Ds.ToArray();
         }
 
         /// <summary>
