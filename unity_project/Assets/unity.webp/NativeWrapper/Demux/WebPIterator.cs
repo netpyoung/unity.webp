@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-namespace WebP
+namespace WebP.NativeWrapper.Demux
 {
     [StructLayoutAttribute(LayoutKind.Sequential)]
     public struct WebPIterator
@@ -23,31 +23,6 @@ namespace WebP
         public uint[] pad; // padding for later use.
         // void*
         public IntPtr private_; // for internal use only.
-    }
-
-    // Dispose method (animation only). Indicates how the area used by the current
-    // frame is to be treated before rendering the next frame on the canvas.
-    public enum WebPMuxAnimDispose
-    {
-        WEBP_MUX_DISPOSE_NONE, // Do not dispose.
-        WEBP_MUX_DISPOSE_BACKGROUND // Dispose to background color.
-    }
-
-    [StructLayoutAttribute(LayoutKind.Sequential)]
-    public struct WebPData
-    {
-        // uint8_t*
-        public IntPtr bytes;
-        // size_t
-        public UIntPtr size;
-    }
-
-    // Blend operation (animation only). Indicates how transparent pixels of the
-    // current frame are blended with those of the previous canvas.
-    public enum WebPMuxAnimBlend
-    {
-        WEBP_MUX_BLEND, // Blend.
-        WEBP_MUX_NO_BLEND // Do not blend.
     }
 
 }

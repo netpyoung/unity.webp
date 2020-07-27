@@ -1,12 +1,11 @@
 ﻿
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
-
-using WebP.Extern;
+using WebP.NativeWrapper.Dec;
+using WebP.NativeWrapper.Demux;
 
 namespace WebP
 {
@@ -82,7 +81,7 @@ namespace WebP
 			{
 				lWidth = 0;
 				lHeight = 0;
-				if (NativeBindings.WebPGetInfo((IntPtr)lDataPtr, (UIntPtr)lData.Length, ref lWidth, ref lHeight) == 0)
+				if (Decode.WebPGetInfo((IntPtr)lDataPtr, (UIntPtr)lData.Length, ref lWidth, ref lHeight) == 0)
 				{
 					throw new Exception("Invalid WebP header detected");
 				}
@@ -131,7 +130,7 @@ namespace WebP
 					
 					WebPDecoderConfig config = new WebPDecoderConfig();
 					
-					if (NativeBindings.WebPInitDecoderConfig(ref config) == 0)
+					if (Decode.WebPInitDecoderConfig(ref config) == 0)
 					{
 						throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
 					}
@@ -146,7 +145,7 @@ namespace WebP
 					config.options.scaled_height = lHeight;
 
 					// read the .webp input file information
-					VP8StatusCode result = NativeBindings.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)lLength, ref config.input);
+					VP8StatusCode result = Decode.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)lLength, ref config.input);
 					if (result != VP8StatusCode.VP8_STATUS_OK)
 					{
 						throw new Exception(string.Format("Failed WebPGetFeatures with error {0}.", result.ToString()));
@@ -162,7 +161,7 @@ namespace WebP
 					config.output.is_external_memory = 1;
 
                     // Decode
-                    result = NativeBindings.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
+                    result = Decode.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
                         throw new Exception(string.Format("Failed WebPDecode with error {0}.", result.ToString()));
@@ -298,11 +297,11 @@ namespace WebP
 
                 if (lQuality == -1)
                 {
-                    lLength = (int)NativeBindings.WebPEncodeLosslessRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, ref lResult);
+                    lLength = (int)Decode.WebPEncodeLosslessRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, ref lResult);
                 }
                 else
                 {
-                    lLength = (int)NativeBindings.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
+                    lLength = (int)Decode.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
                 }
 
                 if (lLength == 0)
@@ -315,7 +314,7 @@ namespace WebP
             }
             finally
             {
-                NativeBindings.WebPSafeFree(lResult);
+                Decode.WebPSafeFree(lResult);
             }
 
             lPinnedArray.Free();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebP
+namespace WebP.Experiment.Animation
 {
 
     /// <summary>

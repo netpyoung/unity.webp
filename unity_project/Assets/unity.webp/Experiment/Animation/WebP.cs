@@ -1,8 +1,7 @@
-using Game;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace WebP
+namespace WebP.Experiment.Animation
 {
 
     /// <summary>

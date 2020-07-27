@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using WebP;
-using WebP.Extern;
+using WebP.NativeWrapper.Dec;
+using WebP.NativeWrapper.Demux;
 
-namespace Game
+namespace WebP.Experiment.Animation
 {
 
     /// <summary>
@@ -28,8 +28,8 @@ namespace Game
             var textures = CreateTexturesFromBytes(decodedBytes, info.canvas_width, info.canvas_height);
 
             // release the decoder
-            libwebpdemux.WebPAnimDecoderReset(decoder);
-            libwebpdemux.WebPAnimDecoderDelete(decoder);
+            Demux.WebPAnimDecoderReset(decoder);
+            Demux.WebPAnimDecoderDelete(decoder);
 
             return textures;
         }
@@ -89,7 +89,7 @@ namespace Game
 
             fixed (byte* p = bytes)
             {
-                var webpData = new WebP.Extern.WebPData
+                var webpData = new WebPData
                 {
                     bytes = (IntPtr) p,
                     size = (UIntPtr) bytes.Length
@@ -101,10 +101,10 @@ namespace Game
                     color_mode = WEBP_CSP_MODE.MODE_RGBA
                 };
 
-                decoder = libwebpdemux.WebPAnimDecoderNew(ref webpData, ref options);
+                decoder = Demux.WebPAnimDecoderNew(ref webpData, ref options);
                 
                 info = new WebPAnimInfo();
-                var success = libwebpdemux.WebPAnimDecoderGetInfo(decoder, ref info);
+                var success = Demux.WebPAnimDecoderGetInfo(decoder, ref info);
 
                 if (success == 0)
                 {

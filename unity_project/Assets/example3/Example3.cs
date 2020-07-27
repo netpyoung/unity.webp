@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -16,7 +15,7 @@ public class Example3 : MonoBehaviour
 
     private async Task LoadWebP(string url)
     {
-        var renderer = await WebP.WebP.LoadTexturesAsync(url);
+        var renderer = await WebP.Experiment.Animation.WebP.LoadTexturesAsync(url);
         if (renderer != null)
         {
             renderer.OnRender += texture => OnWebPRender(texture, url);

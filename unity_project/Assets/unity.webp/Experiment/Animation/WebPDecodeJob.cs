@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
-using WebP.Extern;
+using WebP.NativeWrapper.Demux;
 
-namespace WebP
+namespace WebP.Experiment.Animation
 {
 
     /// <summary>
@@ -65,10 +65,10 @@ namespace WebP
         public void Excute(int index)
         {
             // get the demuxer (which contains almost all the information about the WebP file)
-            var demuxer = libwebpdemux.WebPAnimDecoderGetDemuxer(_decoder);
+            var demuxer = Demux.WebPAnimDecoderGetDemuxer(_decoder);
             var iter = new WebPIterator();
             // use the demuxer and WebPIterator to extract one frame from the WebP data
-            var success = libwebpdemux.WebPDemuxGetFrame(demuxer, index + 1, ref iter);
+            var success = Demux.WebPDemuxGetFrame(demuxer, index + 1, ref iter);
             if (success == 0)
             {
                 Debug.LogError($"[WebPDecodeTask] Decode frame data {index} failed");
@@ -91,7 +91,7 @@ namespace WebP
             // if not using concurrent dict, exceptions may happen 
             _managedBytes?.TryAdd(index, (loadedBytes, iter.duration));
             // release the iterator pointer
-            libwebpdemux.WebPDemuxReleaseIterator(ref iter);
+            Demux.WebPDemuxReleaseIterator(ref iter);
         }
     }
 

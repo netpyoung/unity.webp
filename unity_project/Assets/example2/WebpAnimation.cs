@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using WebP.Extern;
+using WebP.NativeWrapper.Dec;
+using WebP.NativeWrapper.Demux;
 
 public class WebpAnimation : MonoBehaviour
 {
@@ -47,7 +47,7 @@ public class WebpAnimation : MonoBehaviour
             use_threads = 1,
             color_mode = WEBP_CSP_MODE.MODE_RGBA
         };
-        libwebpdemux.WebPAnimDecoderOptionsInit(ref option);
+        Demux.WebPAnimDecoderOptionsInit(ref option);
         fixed (byte* p = bytes)
         {
             IntPtr ptr = (IntPtr)p;
@@ -56,10 +56,10 @@ public class WebpAnimation : MonoBehaviour
                 bytes = ptr,
                 size = new UIntPtr((uint)bytes.Length)
             };
-            IntPtr dec = libwebpdemux.WebPAnimDecoderNew(ref webpdata, ref option);
+            IntPtr dec = Demux.WebPAnimDecoderNew(ref webpdata, ref option);
             WebPAnimInfo anim_info = new WebPAnimInfo();
 
-            libwebpdemux.WebPAnimDecoderGetInfo(dec, ref anim_info);
+            Demux.WebPAnimDecoderGetInfo(dec, ref anim_info);
 
             Debug.LogWarning($"{anim_info.frame_count} {anim_info.canvas_width}/{anim_info.canvas_height}");
 
@@ -69,7 +69,7 @@ public class WebpAnimation : MonoBehaviour
             int timestamp = 0;
             for (int i = 0; i < anim_info.frame_count; ++i)
             {
-                int result = libwebpdemux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
+                int result = Demux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
                 int lWidth = anim_info.canvas_width;
                 int lHeight = anim_info.canvas_height;
                 bool lMipmaps = false;
@@ -93,8 +93,8 @@ public class WebpAnimation : MonoBehaviour
                 texture.Apply();
                 ret.Add((texture, timestamp));
             }
-            libwebpdemux.WebPAnimDecoderReset(dec);
-            libwebpdemux.WebPAnimDecoderDelete(dec);
+            Demux.WebPAnimDecoderReset(dec);
+            Demux.WebPAnimDecoderDelete(dec);
         }
         return ret;
     }
