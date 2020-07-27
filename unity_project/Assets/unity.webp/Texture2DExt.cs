@@ -153,8 +153,8 @@ namespace WebP
 					config.output.width = lWidth;
 					config.output.is_external_memory = 1;
 
-                    // Decode
-                    result = Decode.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
+					// Decode
+					result = Decode.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
                         throw new Exception(string.Format("Failed WebPDecode with error {0}.", result.ToString()));
@@ -249,7 +249,8 @@ namespace WebP
                 else
                 {
                     lLength = (int)Decode.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
-                }
+
+				}
 
                 if (lLength == 0)
                 {
