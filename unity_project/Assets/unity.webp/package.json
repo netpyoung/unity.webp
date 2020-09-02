@@ -1,0 +1,11 @@
+{
+    "name": "com.netpyoung.webp",
+    "displayName": "unity.webp",
+    "version": "0.1.1",
+    "unity": "2018.4",
+    "description": "webp made easy for Unity3d.",
+    "keywords": [ "webp", "unity.webp" ],
+    "license": "MIT",
+    "category": "image",
+    "dependencies": {}
+}
