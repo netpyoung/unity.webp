@@ -1,12 +1,13 @@
 {
     "name": "unity.webp",
+    "rootNamespace": "",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
-    "overrideReferences": false,
+    "overrideReferences": true,
     "precompiledReferences": [],
-    "autoReferenced": true,
+    "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false

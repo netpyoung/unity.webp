@@ -175,7 +175,7 @@ namespace WebP
         /// <param name="lData"></param>
         /// <param name="lError"></param>
         /// <returns></returns>
-		public static unsafe Texture2D CreateTexture2DFromWebP(byte[] lData, bool lMipmaps, bool lLinear, out Error lError, ScalingFunction scalingFunction = null)
+		public static unsafe Texture2D CreateTexture2DFromWebP(byte[] lData, bool lMipmaps, bool lLinear, out Error lError, ScalingFunction scalingFunction = null, bool makeNoLongerReadable = true)
         {
             Texture2D lTexture2D = null;
             int lWidth;
@@ -188,7 +188,7 @@ namespace WebP
             {
                 lTexture2D = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
                 lTexture2D.LoadRawTextureData(lRawData);
-                lTexture2D.Apply(lMipmaps, true);
+                lTexture2D.Apply(lMipmaps, makeNoLongerReadable);
             }
 
             return lTexture2D;
@@ -200,7 +200,7 @@ namespace WebP
         /// <param name="lTexture2D"></param>
         /// <param name="lData"></param>
         /// <param name="lError"></param>
-        public static unsafe void LoadWebP(this Texture2D lTexture2D, byte[] lData, out Error lError, ScalingFunction scalingFunction = null)
+        public static unsafe void LoadWebP(this Texture2D lTexture2D, byte[] lData, out Error lError, ScalingFunction scalingFunction = null, bool makeNoLongerReadable = true)
         {
             lError = 0;
             bool lMipmaps = lTexture2D.mipmapCount != 1;
@@ -214,7 +214,7 @@ namespace WebP
             if (lError == Error.Success)
             {
                 lTexture2D.LoadRawTextureData(lRawData);
-                lTexture2D.Apply(lMipmaps, true);
+                lTexture2D.Apply(lMipmaps, makeNoLongerReadable);
             }
         }
 
