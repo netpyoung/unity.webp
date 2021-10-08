@@ -1,0 +1,15 @@
+{
+    "name": "Example",
+    "references": [
+        "GUID:9e04c6f1d83f64c85a18cbf2fcccc31c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
