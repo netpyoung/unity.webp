@@ -6,39 +6,32 @@
 
  I decided that there should be a simpler way and I created **unity.webp**, a plugin that helps you to use [webp](https://developers.google.com/speed/webp/) in your Unity3d projects in a clear and easy way and works in **iOS, Android, Windows, Linux** projects.
 
-## Watchout
+## prebuilt library
 
-- currently, not support ios-simulator. but it is easy to add if you have a little effort.
+- prebuilt library are maintained by [prebuilt-libwebp](https://github.com/netpyoung/prebuilt-libwebp)
 
 
-## The fast track
+## installation
 
- All you have to do to start using it in your project:
+choose your preference
 
-1. [Download this .unitypackage from Release Page](https://github.com/netpyoung/unity.webp/releases), extract its content on your Unity3D Project. It contains the dlls that Unity3d will need to access webp.
-2. **You’re done!**
+### using .unitypackage
 
-## Example
+- [Download this .unitypackage from Release Page](https://github.com/netpyoung/unity.webp/releases)
 
-If you want to try it I've uploaded a small example that you will be able to find in the `example` folder. Download the folder and open it with Unity3d to give it a try. It contains classes that will help you to start.
+### using UPM
 
-## UPM
+using `#{version}` for versioning.
+
+ex)
 
 ``` json
 "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.1.1"
 ```
 
-## Acknowledgements
+## Example
 
-This project is based on the work of:
-
-- [octo-code/webp-unity3d](https://github.com/octo-code/webp-unity3d) - License: Apache License - see <https://github.com/octo-code/webp-unity3d/blob/master/LICENSE>
-
-## Etc
-
-- <https://en.wikipedia.org/wiki/Lenna>
-- android ndk - <https://github.com/android-ndk/ndk/wiki>
-  - android-ndk-r15c-darwin-x86_64.zip
+- check [Samples/ directory](https://github.com/netpyoung/unity.webp/tree/master/unity_project/Assets/Samples)
 
 ## Demo
 
@@ -49,4 +42,9 @@ This project is based on the work of:
 ### webp
 
 - BSD
-    ![webp](webplogo.png)
+
+  ![webp](webplogo.png)
+
+## Ref
+
+- [octo-code/webp-unity3d](https://github.com/octo-code/webp-unity3d) - License: Apache License
