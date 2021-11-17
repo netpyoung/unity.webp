@@ -9,7 +9,7 @@
 ## prebuilt library
 
 - prebuilt library are maintained by [prebuilt-libwebp](https://github.com/netpyoung/prebuilt-libwebp)
-  - libwebp version 1.0.0
+  - libwebp version v1.2.1
 
 ## installation
 
@@ -26,7 +26,7 @@ using `#{version}` for versioning.
 ex)
 
 ``` json
-"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.1.1"
+"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.0"
 ```
 
 ## Example
