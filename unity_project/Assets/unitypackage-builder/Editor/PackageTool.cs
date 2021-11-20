@@ -5,7 +5,7 @@ public class PackageTool
     [MenuItem("Package/Update Package")]
     private static void UpdatePackage()
     {
-        const string VERSION = "0.3.0";
+        const string VERSION = "0.3.1";
         AssetDatabase.ExportPackage(
             new[] {"Assets/unity.webp"},
             $"../webp-{VERSION}.unitypackage",
