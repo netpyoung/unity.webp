@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using unity.libwebp;
+using unity.libwebp.Interop;
 using UnityEngine;
-using WebP.NativeWrapper.Dec;
 
 namespace WebP
 {
@@ -79,12 +80,16 @@ namespace WebP
         {
             fixed (byte* lDataPtr = lData)
             {
+                int w;
+                int h;
                 lWidth = 0;
                 lHeight = 0;
-                if (Decode.WebPGetInfo((IntPtr)lDataPtr, (UIntPtr)lData.Length, ref lWidth, ref lHeight) == 0)
+                if (NativeLibwebp.WebPGetInfo(lDataPtr, (UIntPtr)lData.Length, &w, &h) == 0)
                 {
                     throw new Exception("Invalid WebP header detected");
                 }
+                lWidth = w;
+                lHeight = h;
             }
         }
 
@@ -127,7 +132,7 @@ namespace WebP
 
                     WebPDecoderConfig config = new WebPDecoderConfig();
 
-                    if (Decode.WebPInitDecoderConfig(ref config) == 0)
+                    if (NativeLibwebp.WebPInitDecoderConfig(&config) == 0)
                     {
                         throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
                     }
@@ -142,7 +147,7 @@ namespace WebP
                     config.options.scaled_height = lHeight;
 
                     // read the .webp input file information
-                    VP8StatusCode result = Decode.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)lLength, ref config.input);
+                    VP8StatusCode result = NativeLibwebp.WebPGetFeatures(lDataPtr, (UIntPtr)lLength, &config.input);
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
                         throw new Exception(string.Format("Failed WebPGetFeatures with error {0}.", result.ToString()));
@@ -150,7 +155,7 @@ namespace WebP
 
                     // specify the output format
                     config.output.colorspace = WEBP_CSP_MODE.MODE_RGBA;
-                    config.output.u.RGBA.rgba = (IntPtr)lTmpDataPtr;
+                    config.output.u.RGBA.rgba = lTmpDataPtr;
                     config.output.u.RGBA.stride = -lStride;
                     config.output.u.RGBA.size = (UIntPtr)(lHeight * lStride);
                     config.output.height = lHeight;
@@ -158,7 +163,7 @@ namespace WebP
                     config.output.is_external_memory = 1;
 
                     // Decode
-                    result = Decode.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
+                    result = NativeLibwebp.WebPDecode(lDataPtr, (UIntPtr)lLength, &config);
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
                         throw new Exception(string.Format("Failed WebPDecode with error {0}.", result.ToString()));
@@ -228,15 +233,21 @@ namespace WebP
         {
             lError = 0;
 
-            if (lQuality < -1) lQuality = -1;
-            if (lQuality > 100) lQuality = 100;
+            if (lQuality < -1)
+            {
+                lQuality = -1;
+            }
+            if (lQuality > 100)
+            {
+                lQuality = 100;
+            }
 
             Color32[] lRawColorData = lTexture2D.GetPixels32();
             int lWidth = lTexture2D.width;
             int lHeight = lTexture2D.height;
 
-            IntPtr lResult = IntPtr.Zero;
-
+            IntPtr lResult = new IntPtr();
+            byte** pResult = (byte**)&lResult;
             GCHandle lPinnedArray = GCHandle.Alloc(lRawColorData, GCHandleType.Pinned);
             IntPtr lRawDataPtr = lPinnedArray.AddrOfPinnedObject();
 
@@ -248,12 +259,11 @@ namespace WebP
 
                 if (lQuality == -1)
                 {
-                    lLength = (int)Decode.WebPEncodeLosslessRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, ref lResult);
+                    lLength = (int)NativeLibwebp.WebPEncodeLosslessRGBA((byte*)lRawDataPtr, lWidth, lHeight, 4 * lWidth, pResult);
                 }
                 else
                 {
-                    lLength = (int)Decode.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
-
+                    lLength = (int)NativeLibwebp.WebPEncodeRGBA((byte*)lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, pResult);
                 }
 
                 if (lLength == 0)
@@ -266,7 +276,7 @@ namespace WebP
             }
             finally
             {
-                Decode.WebPSafeFree(lResult);
+                NativeLibwebp.WebPSafeFree(*pResult);
             }
 
             lPinnedArray.Free();
@@ -294,7 +304,7 @@ namespace WebP
 
                     WebPDecoderConfig config = new WebPDecoderConfig();
 
-                    if (Decode.WebPInitDecoderConfig(ref config) == 0)
+                    if (NativeLibwebp.WebPInitDecoderConfig(&config) == 0)
                     {
                         throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
                     }
@@ -309,7 +319,7 @@ namespace WebP
                     config.options.scaled_height = height;
 
                     // read the .webp input file information
-                    VP8StatusCode result = Decode.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)webpBytes.Length, ref config.input);
+                    VP8StatusCode result = NativeLibwebp.WebPGetFeatures(lDataPtr, (UIntPtr)webpBytes.Length, &config.input);
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
                         throw new Exception(string.Format("Failed WebPGetFeatures with error {0}.", result.ToString()));
@@ -317,7 +327,7 @@ namespace WebP
 
                     // specify the output format
                     config.output.colorspace = WEBP_CSP_MODE.MODE_RGBA;
-                    config.output.u.RGBA.rgba = (IntPtr)lTmpDataPtr;
+                    config.output.u.RGBA.rgba = lTmpDataPtr;
                     config.output.u.RGBA.stride = -lStride;
                     config.output.u.RGBA.size = (UIntPtr)(height * lStride);
                     config.output.height = height;
@@ -325,7 +335,7 @@ namespace WebP
                     config.output.is_external_memory = 1;
 
                     // Decode
-                    result = Decode.WebPDecode((IntPtr)lDataPtr, (UIntPtr)webpBytes.Length, ref config);
+                    result = NativeLibwebp.WebPDecode(lDataPtr, (UIntPtr)webpBytes.Length, &config);
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
                         throw new Exception(string.Format("Failed WebPDecode with error {0}.", result.ToString()));
@@ -339,7 +349,7 @@ namespace WebP
 
         public static int GetRequireByteSize(byte[] webpBytes, bool isUseMipmap = false)
         {
-            GetWebPDimensions(webpBytes, out var width, out var height);
+            GetWebPDimensions(webpBytes, out int width, out int height);
             return GetRequireByteSize(width, height, isUseMipmap);
         }
 

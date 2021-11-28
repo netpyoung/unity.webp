@@ -6,7 +6,8 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using UnityEngine;
-using WebP.NativeWrapper.Demux;
+using unity.libwebp.Interop;
+using unity.libwebp;
 
 namespace WebP.Experiment.Animation
 {
@@ -47,28 +48,28 @@ namespace WebP.Experiment.Animation
         void Excute(int index);
     }
 
-    internal class WebPDecodeTask : IWebPDecodeTask
+    internal unsafe class WebPDecodeTask : IWebPDecodeTask
     {
         // have to use Concurrent structures to prevent concurrent race exceptions
         private ConcurrentDictionary<int, (byte[], int)> _managedBytes;
-        private IntPtr _decoder;
+        private WebPAnimDecoder* _decoder;
 
         public WebPDecodeTask(IntPtr decoder, ConcurrentDictionary<int, (byte[], int)> managedBytes)
         {
             _managedBytes = managedBytes;
-            _decoder = decoder;
+            _decoder = (WebPAnimDecoder * )decoder;
         }
 
         /// <summary>
         /// The actual decode process which make the magic happen
         /// </summary>
-        public void Excute(int index)
+        public unsafe void Excute(int index)
         {
             // get the demuxer (which contains almost all the information about the WebP file)
-            var demuxer = Demux.WebPAnimDecoderGetDemuxer(_decoder);
-            var iter = new WebPIterator();
+            var demuxer = NativeLibwebpdemux.WebPAnimDecoderGetDemuxer(_decoder);
+            WebPIterator iter = new WebPIterator();
             // use the demuxer and WebPIterator to extract one frame from the WebP data
-            var success = Demux.WebPDemuxGetFrame(demuxer, index + 1, ref iter);
+            var success = NativeLibwebpdemux.WebPDemuxGetFrame(demuxer, index + 1, &iter);
             if (success == 0)
             {
                 Debug.LogError($"[WebPDecodeTask] Decode frame data {index} failed");
@@ -78,7 +79,7 @@ namespace WebP.Experiment.Animation
             // use native memory marshal to minimize the momory consumption from native memory to csharp managed memory
             var size = (int)iter.fragment.size;
             var bytes = new byte[size];
-            Marshal.Copy(iter.fragment.bytes, bytes, 0, size);
+            Marshal.Copy((IntPtr)iter.fragment.bytes, bytes, 0, size);
 
             // parse the memory data (structured bitmap data) to texture bytes, which can be used to parse into Texture
             var loadedBytes = Texture2DExt.LoadRGBAFromWebP(bytes, ref iter.width, ref iter.height, false, out var error, null);
@@ -91,7 +92,7 @@ namespace WebP.Experiment.Animation
             // if not using concurrent dict, exceptions may happen 
             _managedBytes?.TryAdd(index, (loadedBytes, iter.duration));
             // release the iterator pointer
-            Demux.WebPDemuxReleaseIterator(ref iter);
+            NativeLibwebpdemux.WebPDemuxReleaseIterator(&iter);
         }
     }
 

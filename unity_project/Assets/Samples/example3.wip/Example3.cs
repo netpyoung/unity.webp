@@ -2,11 +2,13 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using WebP.Experiment.Animation;
 
 public class Example3 : MonoBehaviour
 {
     public RawImage RawImage;
-    async void Start()
+
+    private async void Start()
     {
         //// remote file loading
         //await LoadWebP("https://www.example.com/path/to/webp.webp");
@@ -21,7 +23,7 @@ public class Example3 : MonoBehaviour
 
     private async Task LoadWebP(string url)
     {
-        var renderer = await WebP.Experiment.Animation.WebP.LoadTexturesAsync(url);
+        WebPRendererWrapper<Texture2D> renderer = await WebP.Experiment.Animation.WebP.LoadTexturesAsync(url);
         if (renderer != null)
         {
             renderer.OnRender += texture => OnWebPRender(texture, url);
@@ -31,7 +33,7 @@ public class Example3 : MonoBehaviour
 
     private async Task LoadWebP(byte[] bytes)
     {
-        var renderer = await WebP.Experiment.Animation.WebP.LoadTexturesAsync(bytes);
+        WebPRendererWrapper<Texture2D> renderer = await WebP.Experiment.Animation.WebP.LoadTexturesAsync(bytes);
         if (renderer != null)
         {
             renderer.OnRender += texture => OnWebPRender(texture, null);
@@ -41,7 +43,6 @@ public class Example3 : MonoBehaviour
 
     private void OnWebPRender(Texture texture, string url)
     {
-        // handle the texture here, give the texture to Image for example
         RawImage.texture = texture;
     }
 

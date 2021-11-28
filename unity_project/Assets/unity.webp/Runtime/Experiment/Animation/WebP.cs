@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace WebP.Experiment.Animation
 {
@@ -43,20 +45,23 @@ namespace WebP.Experiment.Animation
         /// <returns>WebPRederer to provide Texture for rendering</returns>
         public static async Task<WebPRendererWrapper<Texture2D>> LoadTexturesAsync(string url)
         {
-            var bytes = await WebPLoader.Load(url);
-            if (bytes == null || bytes.Length <= 0) return null;
+            byte[] bytes = await WebPLoader.Load(url);
+            if (bytes == null || bytes.Length <= 0)
+            {
+                return null;
+            }
 
-            var textures = await WebPDecoderWrapper.Decode(bytes);
-            var renderer = new WebPRendererWrapper<Texture2D>(textures);
+            List<(Texture2D, int)> textures = await WebPDecoderWrapper.Decode(bytes);
+            WebPRendererWrapper<Texture2D> renderer = new WebPRendererWrapper<Texture2D>(textures);
             return renderer;
         }
 
         public static async Task<WebPRendererWrapper<Texture2D>> LoadTexturesAsync(byte[] bytes)
         {
-            Debug.Assert(bytes != null);
+            Assert.IsNotNull(bytes);
 
-            var textures = await WebPDecoderWrapper.Decode(bytes);
-            var renderer = new WebPRendererWrapper<Texture2D>(textures);
+            List<(Texture2D, int)> textures = await WebPDecoderWrapper.Decode(bytes);
+            WebPRendererWrapper<Texture2D> renderer = new WebPRendererWrapper<Texture2D>(textures);
             return renderer;
         }
     }

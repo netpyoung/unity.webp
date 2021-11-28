@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using unity.libwebp;
+using unity.libwebp.Interop;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
-using WebP.NativeWrapper.Dec;
-using WebP.NativeWrapper.Demux;
 
 public class WebpAnimationFix : MonoBehaviour
 {
     public RawImage image2;
 
-    async void Start()
+    private async void Start()
     {
         //await LoadAnimation2("butterfly_small");
         //List<(Texture2D, int)> lst = LoadAnimation("cat");
@@ -43,65 +43,62 @@ public class WebpAnimationFix : MonoBehaviour
             }
         }
     }
-    unsafe List<(Texture2D, int)> LoadAnimation(string loadPath)
+
+    private unsafe List<(Texture2D, int)> LoadAnimation(string loadPath)
     {
-        List<ValueTuple<Texture2D, int>> ret = new List<ValueTuple<Texture2D, int>>();
+        List<(Texture2D, int)> ret = new List<(Texture2D, int)>();
         TextAsset textasset = Resources.Load<TextAsset>(loadPath);
         byte[] bytes = textasset.bytes;
         WebPAnimDecoderOptions option = new WebPAnimDecoderOptions
         {
             use_threads = 1,
-            color_mode = WEBP_CSP_MODE.MODE_RGBA
+            color_mode = (unity.libwebp.Interop.WEBP_CSP_MODE)WEBP_CSP_MODE.MODE_RGBA
         };
-        Demux.WebPAnimDecoderOptionsInit(ref option);
+        NativeLibwebpdemux.WebPAnimDecoderOptionsInit(&option);
         fixed (byte* p = bytes)
         {
-            IntPtr ptr = (IntPtr)p;
             WebPData webpdata = new WebPData
             {
-                bytes = ptr,
+                bytes = p,
                 size = new UIntPtr((uint)bytes.Length)
             };
-            IntPtr dec = Demux.WebPAnimDecoderNew(ref webpdata, ref option);
+            WebPAnimDecoder* dec = NativeLibwebpdemux.WebPAnimDecoderNew(&webpdata, &option);
             WebPAnimInfo anim_info = new WebPAnimInfo();
 
-            Demux.WebPAnimDecoderGetInfo(dec, ref anim_info);
+            NativeLibwebpdemux.WebPAnimDecoderGetInfo(dec, &anim_info);
 
             Debug.LogWarning($"{anim_info.frame_count} {anim_info.canvas_width}/{anim_info.canvas_height}");
 
-            int size = anim_info.canvas_width * 4 * anim_info.canvas_height;
+            int size = (int)anim_info.canvas_width * 4 * (int)anim_info.canvas_height;
+            dec->config_.options.flip = 1;
+            dec->config_.options.no_fancy_upsampling = 1;
 
-            WebPAnimDecoder decoder = (WebPAnimDecoder)Marshal.PtrToStructure(dec, typeof(WebPAnimDecoder));
-            decoder.config_.options.flip = 1;
-            decoder.config_.options.no_fancy_upsampling = 1;
-            Marshal.StructureToPtr(decoder, dec, true);
-
-
-            IntPtr unmanagedPointer = new IntPtr();
             int timestamp = 0;
+
+            IntPtr pp = new IntPtr();
+            byte** unmanagedPointer = (byte**)&pp;
             for (int i = 0; i < anim_info.frame_count; ++i)
             {
-                int result = Demux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
-                if (result != 1)
-                {
-                    Debug.LogError("WTF");
-                }
-                int lWidth = anim_info.canvas_width;
-                int lHeight = anim_info.canvas_height;
+                int result = NativeLibwebpdemux.WebPAnimDecoderGetNext(dec, unmanagedPointer, &timestamp);
+                Assert.AreEqual(1, result);
+
+                int lWidth = (int)anim_info.canvas_width;
+                int lHeight = (int)anim_info.canvas_height;
                 bool lMipmaps = false;
                 bool lLinear = false;
 
                 Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
-                texture.LoadRawTextureData(unmanagedPointer, size);
+                texture.LoadRawTextureData(pp, size);
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
                 ret.Add((texture, timestamp));
             }
-            Demux.WebPAnimDecoderReset(dec);
-            Demux.WebPAnimDecoderDelete(dec);
+            NativeLibwebpdemux.WebPAnimDecoderReset(dec);
+            NativeLibwebpdemux.WebPAnimDecoderDelete(dec);
         }
         return ret;
     }
-    unsafe List<(Texture2D, int)> LoadAnimation3(string loadPath)
+
+    private unsafe List<(Texture2D, int)> LoadAnimation3(string loadPath)
     {
         List<ValueTuple<Texture2D, int>> ret = new List<ValueTuple<Texture2D, int>>();
         TextAsset textasset = Resources.Load<TextAsset>(loadPath);
@@ -109,30 +106,28 @@ public class WebpAnimationFix : MonoBehaviour
         WebPAnimDecoderOptions option = new WebPAnimDecoderOptions
         {
             use_threads = 1,
-            color_mode = WEBP_CSP_MODE.MODE_RGBA
+            color_mode = (unity.libwebp.Interop.WEBP_CSP_MODE)WEBP_CSP_MODE.MODE_RGBA
         };
 
-        var config = new WebPDecoderConfig();
-        if (Decode.WebPInitDecoderConfig(ref config) == 0)
-        {
-            throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
-        }
-        Demux.WebPAnimDecoderOptionsInit(ref option);
+        unity.libwebp.Interop.WebPDecoderConfig config = new unity.libwebp.Interop.WebPDecoderConfig();
+        //if (Decode.WebPInitDecoderConfig(ref config) == 0)
+        //{
+        //    throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
+        //}
+        NativeLibwebpdemux.WebPAnimDecoderOptionsInit(&option);
+
         fixed (byte* p = bytes)
         {
-            IntPtr ptr = (IntPtr)p;
-            var webpdata = new WebPData
+            WebPData webpdata = new WebPData
             {
-                bytes = ptr,
+                bytes = p,
                 size = new UIntPtr((uint)bytes.Length)
             };
 
             WebPAnimDecoderOptions opt = new WebPAnimDecoderOptions();
-            Demux.WebPAnimDecoderOptionsInit(ref opt);
+            NativeLibwebpdemux.WebPAnimDecoderOptionsInit(&opt);
 
-            IntPtr webPAnimDecoderPtr = Demux.WebPAnimDecoderNewInternal(ref webpdata, ref opt, Demux.WEBP_DEMUX_ABI_VERSION);
-            Debug.Log($"webPAnimDecoderPtr = {webPAnimDecoderPtr}");
-            WebPAnimDecoder decoder = (WebPAnimDecoder)Marshal.PtrToStructure(webPAnimDecoderPtr, typeof(WebPAnimDecoder));
+            WebPAnimDecoder* webPAnimDecoderPtr = NativeLibwebpdemux.WebPAnimDecoderNewInternal(&webpdata, &opt, NativeLibwebpdemux.WEBP_DEMUX_ABI_VERSION);
 
             //int width = 400;
             //int height = 400;
@@ -148,42 +143,43 @@ public class WebpAnimationFix : MonoBehaviour
                 //config.options.scaled_height = height;
                 config.options.flip = 1;
                 //config.options.dithering_strength = 100;
-                config.output.colorspace = WEBP_CSP_MODE.MODE_RGBA;
+                config.output.colorspace = (unity.libwebp.Interop.WEBP_CSP_MODE)WEBP_CSP_MODE.MODE_RGBA;
                 //config.output.is_external_memory = 1;
                 //config.output.width = width;
                 //config.output.height = height;
             }
-            decoder.config_ = config;
-            Marshal.StructureToPtr(decoder, webPAnimDecoderPtr, true);
-            IntPtr dec = webPAnimDecoderPtr;
+            webPAnimDecoderPtr->config_ = config;
             WebPAnimInfo anim_info = new WebPAnimInfo();
 
-            Demux.WebPAnimDecoderGetInfo(dec, ref anim_info);
+            NativeLibwebpdemux.WebPAnimDecoderGetInfo(webPAnimDecoderPtr, &anim_info);
 
             Debug.LogWarning($"{anim_info.frame_count} {anim_info.canvas_width}/{anim_info.canvas_height}");
 
-            int size = anim_info.canvas_width * 4 * anim_info.canvas_height;
+            int size = (int)anim_info.canvas_width * 4 * (int)anim_info.canvas_height;
 
-            IntPtr unmanagedPointer = new IntPtr();
             int timestamp = 0;
+            IntPtr pp = new IntPtr();
+            byte** unmanagedPointer = (byte**)&pp;
             for (int i = 0; i < anim_info.frame_count; ++i)
             {
-                int result = Demux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
-                int lWidth = anim_info.canvas_width;
-                int lHeight = anim_info.canvas_height;
+                int result = NativeLibwebpdemux.WebPAnimDecoderGetNext(webPAnimDecoderPtr, unmanagedPointer, &timestamp);
+                int lWidth = (int)anim_info.canvas_width;
+                int lHeight = (int)anim_info.canvas_height;
                 bool lMipmaps = false;
                 bool lLinear = false;
 
                 Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
-                texture.LoadRawTextureData(unmanagedPointer, size);
+                texture.LoadRawTextureData((IntPtr)unmanagedPointer, size);
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
                 ret.Add((texture, timestamp));
             }
-            Demux.WebPAnimDecoderReset(dec);
-            Demux.WebPAnimDecoderDelete(dec);
+
+            NativeLibwebpdemux.WebPAnimDecoderReset(webPAnimDecoderPtr);
+            NativeLibwebpdemux.WebPAnimDecoderDelete(webPAnimDecoderPtr);
         }
         return ret;
     }
+
     private unsafe List<(Texture2D, int)> LoadAnimation2(string loadPath)
     {
         List<ValueTuple<Texture2D, int>> ret = new List<ValueTuple<Texture2D, int>>();
@@ -191,99 +187,82 @@ public class WebpAnimationFix : MonoBehaviour
         TextAsset textasset = Resources.Load<TextAsset>(loadPath);
         byte[] bytes = textasset.bytes;
 
-        var config = new WebPDecoderConfig();
-        if (Decode.WebPInitDecoderConfig(ref config) == 0)
+        WebPDecoderConfig config = new WebPDecoderConfig();
+        if (NativeLibwebp.WebPInitDecoderConfig(&config) == 0)
         {
             throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
         }
 
-        var iter = new WebPIterator();
-        IntPtr webpDataPtr = Marshal.AllocHGlobal(sizeof(WebPData));
-        IntPtr configPtr = Marshal.AllocHGlobal(Marshal.SizeOf(config));
-        IntPtr iterPtr = Marshal.AllocHGlobal(Marshal.SizeOf(iter));
-
-        try
+        WebPIterator iter = new WebPIterator();
+        fixed (byte* p = bytes)
         {
-            fixed (byte* p = bytes)
+            WebPData webpdata = new WebPData
             {
-                IntPtr ptr = (IntPtr)p;
-                WebPData webpdata = new WebPData
-                {
-                    bytes = ptr,
-                    size = new UIntPtr((uint)bytes.Length)
-                };
-                Marshal.StructureToPtr(webpdata, webpDataPtr, false);
-                Marshal.StructureToPtr(config, configPtr, false);
-                Marshal.StructureToPtr(iter, iterPtr, false);
-                IntPtr webPDemuxer = Demux.WebPDemuxInternal(webpDataPtr, 0, (IntPtr)0, Demux.WEBP_DEMUX_ABI_VERSION);
+                bytes = p,
+                size = new UIntPtr((uint)bytes.Length)
+            };
+            WebPDemuxer* webPDemuxer = NativeLibwebpdemux.WebPDemuxInternal(&webpdata, 0, (WebPDemuxState*)IntPtr.Zero, NativeLibwebpdemux.WEBP_DEMUX_ABI_VERSION);
 
-                VP8StatusCode result = Decode.WebPGetFeatures(webpdata.bytes, webpdata.size, ref config.input);
-                if (result != VP8StatusCode.VP8_STATUS_OK)
-                {
-                    throw new Exception(string.Format("Failed WebPGetFeatures with error {0}.", result.ToString()));
-                }
-
-                var height = config.input.height;
-                var width = config.input.height;
-
-                config.options.bypass_filtering = 0;
-                config.options.use_threads = 1;
-                config.options.no_fancy_upsampling = 0;
-                config.options.use_cropping = 0;
-                config.options.use_scaling = 1;
-                config.options.scaled_width = width;
-                config.options.scaled_height = height;
-                config.options.flip = 1;
-                config.options.dithering_strength = 0;
-                config.output.colorspace = WEBP_CSP_MODE.MODE_RGBA;
-                config.output.width = width;
-                config.output.height = height;
-
-                //byte[] bbb = new byte[width * height];
-                //fixed (byte* ppp = bbb)
-                //{
-                //    config.output.u.RGBA.rgba = (IntPtr)ppp;
-                //}
-                //config.output.u.RGBA.stride = width * 4;
-                //config.output.u.RGBA.size = (UIntPtr)(width * height);
-                //config.output.is_external_memory = 1;
-                //config.output.is_external_memory = 1;
-
-                int success = Demux.WebPDemuxGetFrame(webPDemuxer, 1, ref iter);
-                if (success != 1)
-                {
-                    return ret;
-                }
-
-                int timestamp = 0;
-                int size = width * height * 4;
-                do
-                {
-                    WebPData frame = iter.fragment;
-                    VP8StatusCode status = Decode.WebPDecode(frame.bytes, frame.size, ref config);
-                    if (status != VP8StatusCode.VP8_STATUS_OK)
-                    {
-                        Debug.LogError(status);
-                        break;
-                    }
-
-                    var texture = new Texture2D(width, height, TextureFormat.RGBA32, mipChain: false, linear: false);
-                    texture.LoadRawTextureData(config.output.u.RGBA.rgba, size);
-                    texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
-                    timestamp += iter.duration;
-                    ret.Add((texture, timestamp));
-                }
-                while (Demux.WebPDemuxNextFrame(ref iter) == 1);
-
-                Demux.WebPDemuxDelete(webPDemuxer);
-                Demux.WebPDemuxReleaseIterator(ref iter);
+            VP8StatusCode result = NativeLibwebp.WebPGetFeatures(webpdata.bytes, webpdata.size, &config.input);
+            if (result != VP8StatusCode.VP8_STATUS_OK)
+            {
+                throw new Exception(string.Format("Failed WebPGetFeatures with error {0}.", result.ToString()));
             }
-        }
-        finally
-        {
-            Marshal.FreeHGlobal(webpDataPtr);
-            Marshal.FreeHGlobal(configPtr);
-            Marshal.FreeHGlobal(iterPtr);
+
+            int height = config.input.height;
+            int width = config.input.height;
+
+            config.options.bypass_filtering = 0;
+            config.options.use_threads = 1;
+            config.options.no_fancy_upsampling = 0;
+            config.options.use_cropping = 0;
+            config.options.use_scaling = 1;
+            config.options.scaled_width = width;
+            config.options.scaled_height = height;
+            config.options.flip = 1;
+            config.options.dithering_strength = 0;
+            config.output.colorspace = WEBP_CSP_MODE.MODE_RGBA;
+            config.output.width = width;
+            config.output.height = height;
+
+            //byte[] bbb = new byte[width * height];
+            //fixed (byte* ppp = bbb)
+            //{
+            //    config.output.u.RGBA.rgba = (IntPtr)ppp;
+            //}
+            //config.output.u.RGBA.stride = width * 4;
+            //config.output.u.RGBA.size = (UIntPtr)(width * height);
+            //config.output.is_external_memory = 1;
+            //config.output.is_external_memory = 1;
+
+            int success = NativeLibwebpdemux.WebPDemuxGetFrame(webPDemuxer, 1, &iter);
+            if (success != 1)
+            {
+                return ret;
+            }
+
+            int timestamp = 0;
+            int size = width * height * 4;
+            do
+            {
+                WebPData frame = iter.fragment;
+                VP8StatusCode status = NativeLibwebp.WebPDecode(frame.bytes, frame.size, &config);
+                if (status != VP8StatusCode.VP8_STATUS_OK)
+                {
+                    Debug.LogError(status);
+                    break;
+                }
+
+                Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, mipChain: false, linear: false);
+                texture.LoadRawTextureData((IntPtr)config.output.u.RGBA.rgba, size);
+                texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+                timestamp += iter.duration;
+                ret.Add((texture, timestamp));
+            }
+            while (NativeLibwebpdemux.WebPDemuxNextFrame(&iter) == 1);
+
+            NativeLibwebpdemux.WebPDemuxDelete(webPDemuxer);
+            NativeLibwebpdemux.WebPDemuxReleaseIterator(&iter);
         }
 
         return ret;

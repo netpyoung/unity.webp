@@ -1,4 +1,4 @@
-﻿using WebP.NativeWrapper.Dec;
+﻿using unity.libwebp;
 
 namespace WebP
 {
@@ -6,21 +6,20 @@ namespace WebP
     {
         public static string GetDecoderVersion()
         {
-            
-            uint v = (uint)Decode.WebPGetDecoderVersion();
-            var revision = v % 256;
-            var minor = (v >> 8) % 256;
-            var major = (v >> 16) % 256;
-            return major + "." + minor + "." + revision;
+            uint v = (uint)NativeLibwebp.WebPGetDecoderVersion();
+            uint revision = v % 256;
+            uint minor = (v >> 8) % 256;
+            uint major = (v >> 16) % 256;
+            return $"{major}.{minor}.{revision}";
         }
 
         public static string GetEncoderVersion()
         {
-            uint v = (uint)Decode.WebPGetEncoderVersion();
-            var revision = v % 256;
-            var minor = (v >> 8) % 256;
-            var major = (v >> 16) % 256;
-            return major + "." + minor + "." + revision;
+            uint v = (uint)NativeLibwebp.WebPGetEncoderVersion();
+            uint revision = v % 256;
+            uint minor = (v >> 8) % 256;
+            uint major = (v >> 16) % 256;
+            return $"{major}.{minor}.{revision}";
         }
     }
 }

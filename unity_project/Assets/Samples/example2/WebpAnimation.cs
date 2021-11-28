@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using unity.libwebp;
+using unity.libwebp.Interop;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
-using WebP.NativeWrapper.Dec;
-using WebP.NativeWrapper.Demux;
 
 public class WebpAnimation : MonoBehaviour
 {
     public RawImage image2;
 
-    async void Start()
+    private async void Start()
     {
         List<(Texture2D, int)> lst = LoadAnimation("cat");
 
@@ -36,51 +37,58 @@ public class WebpAnimation : MonoBehaviour
             }
         }
     }
-
-    unsafe List<(Texture2D, int)> LoadAnimation(string loadPath)
+    private unsafe List<(Texture2D, int)> LoadAnimation(string loadPath)
     {
-        List<ValueTuple<Texture2D, int>> ret = new List<ValueTuple<Texture2D, int>>();
+        List<(Texture2D, int)> ret = new List<(Texture2D, int)>();
         TextAsset textasset = Resources.Load<TextAsset>(loadPath);
         byte[] bytes = textasset.bytes;
         WebPAnimDecoderOptions option = new WebPAnimDecoderOptions
         {
             use_threads = 1,
-            color_mode = WEBP_CSP_MODE.MODE_RGBA
+            color_mode = WEBP_CSP_MODE.MODE_RGBA,
         };
-        Demux.WebPAnimDecoderOptionsInit(ref option);
+        option.padding[5] = 1;
+
+        NativeLibwebpdemux.WebPAnimDecoderOptionsInit(&option);
         fixed (byte* p = bytes)
         {
-            IntPtr ptr = (IntPtr)p;
             WebPData webpdata = new WebPData
             {
-                bytes = ptr,
+                bytes = p,
                 size = new UIntPtr((uint)bytes.Length)
             };
-            IntPtr dec = Demux.WebPAnimDecoderNew(ref webpdata, ref option);
+            WebPAnimDecoder* dec = NativeLibwebpdemux.WebPAnimDecoderNew(&webpdata, &option);
+            //dec->config_.options.flip = 1;
+
             WebPAnimInfo anim_info = new WebPAnimInfo();
 
-            Demux.WebPAnimDecoderGetInfo(dec, ref anim_info);
+            NativeLibwebpdemux.WebPAnimDecoderGetInfo(dec, &anim_info);
 
             Debug.LogWarning($"{anim_info.frame_count} {anim_info.canvas_width}/{anim_info.canvas_height}");
 
-            int size = anim_info.canvas_width * 4 * anim_info.canvas_height;
+            uint size = anim_info.canvas_width * 4 * anim_info.canvas_height;
 
-            IntPtr unmanagedPointer = new IntPtr();
             int timestamp = 0;
+
+            IntPtr pp = new IntPtr();
+            byte** unmanagedPointer = (byte**)&pp;
             for (int i = 0; i < anim_info.frame_count; ++i)
             {
-                int result = Demux.WebPAnimDecoderGetNext(dec, ref unmanagedPointer, ref timestamp);
-                int lWidth = anim_info.canvas_width;
-                int lHeight = anim_info.canvas_height;
+                int result = NativeLibwebpdemux.WebPAnimDecoderGetNext(dec, unmanagedPointer, &timestamp);
+                Assert.AreEqual(1, result);
+
+                int lWidth = (int)anim_info.canvas_width;
+                int lHeight = (int)anim_info.canvas_height;
                 bool lMipmaps = false;
                 bool lLinear = false;
 
                 Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
-                texture.LoadRawTextureData(unmanagedPointer, size);
+                texture.LoadRawTextureData(pp, (int)size);
 
                 {// Flip updown.
-                    // ref: https://github.com/netpyoung/unity.webp/issues/18
-                    // ref: https://github.com/webmproject/libwebp/blob/master/src/demux/anim_decode.c#L309
+                 // ref: https://github.com/netpyoung/unity.webp/issues/25
+                 // ref: https://github.com/netpyoung/unity.webp/issues/21
+                 // ref: https://github.com/webmproject/libwebp/blob/master/src/demux/anim_decode.c#L309
                     Color[] pixels = texture.GetPixels();
                     Color[] pixelsFlipped = new Color[pixels.Length];
                     for (int y = 0; y < anim_info.canvas_height; y++)
@@ -93,8 +101,8 @@ public class WebpAnimation : MonoBehaviour
                 texture.Apply();
                 ret.Add((texture, timestamp));
             }
-            Demux.WebPAnimDecoderReset(dec);
-            Demux.WebPAnimDecoderDelete(dec);
+            NativeLibwebpdemux.WebPAnimDecoderReset(dec);
+            NativeLibwebpdemux.WebPAnimDecoderDelete(dec);
         }
         return ret;
     }

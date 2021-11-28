@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using unity.libwebp;
+using unity.libwebp.Interop;
 using UnityEngine;
-using WebP.NativeWrapper.Dec;
-using WebP.NativeWrapper.Demux;
 
 namespace WebP.Experiment.Animation
 {
@@ -21,17 +21,22 @@ namespace WebP.Experiment.Animation
             
             Debug.Log($"[WebPDecoderWrapper] Loaded animation: {info.frame_count}, {info.canvas_width}/{info.canvas_height}");
             // decode every frame of the WebP file with threads
-            var decodedBytes = await WebPDecodeJob.StartJob(decoder, info.frame_count);
+            var decodedBytes = await WebPDecodeJob.StartJob(decoder, (int)info.frame_count);
             
             Debug.Log($"[WebPDecoderWrapper] Raw bytes decode complete");
 
-            var textures = CreateTexturesFromBytes(decodedBytes, info.canvas_width, info.canvas_height);
+            var textures = CreateTexturesFromBytes(decodedBytes, (int)info.canvas_width, (int)info.canvas_height);
 
             // release the decoder
-            Demux.WebPAnimDecoderReset(decoder);
-            Demux.WebPAnimDecoderDelete(decoder);
+            ReleaseDecode(decoder);
 
             return textures;
+        }
+
+        private static unsafe void ReleaseDecode(IntPtr decoder)
+        {
+            NativeLibwebpdemux.WebPAnimDecoderReset((WebPAnimDecoder*)decoder);
+            NativeLibwebpdemux.WebPAnimDecoderDelete((WebPAnimDecoder*)decoder);
         }
 
         private static List<(Texture2D, int)> CreateTexturesFromBytes(List<(byte[], int)> decodedBytes, int width, int height)
@@ -85,27 +90,31 @@ namespace WebP.Experiment.Animation
         {
             decoder = IntPtr.Zero;
             info = new WebPAnimInfo();
-            if (bytes == null || bytes.Length <= 0) return false;
+            if (bytes == null || bytes.Length <= 0)
+            {
+                return false;
+            }
 
             fixed (byte* p = bytes)
             {
-                var webpData = new WebPData
+                WebPData webpData = new WebPData
                 {
-                    bytes = (IntPtr) p,
+                    bytes = p,
                     size = (UIntPtr) bytes.Length
                 };
-                var options = new WebPAnimDecoderOptions
+                WebPAnimDecoderOptions options = new WebPAnimDecoderOptions
                 {
                     //flip = 1, 
                     use_threads = 1,
                     color_mode = WEBP_CSP_MODE.MODE_RGBA
                 };
 
-                decoder = Demux.WebPAnimDecoderNew(ref webpData, ref options);
-                
-                info = new WebPAnimInfo();
-                var success = Demux.WebPAnimDecoderGetInfo(decoder, ref info);
+                WebPAnimDecoder* decoderP = NativeLibwebpdemux.WebPAnimDecoderNew(&webpData, &options);
 
+                WebPAnimInfo webpAnimInfo = new WebPAnimInfo();
+                var success = NativeLibwebpdemux.WebPAnimDecoderGetInfo(decoderP, &webpAnimInfo);
+                info = webpAnimInfo;
+                decoder = (IntPtr)decoderP;
                 if (success == 0)
                 {
                     Debug.LogError($"[WebPDecoderWrapper] Get file info failed");

@@ -18,19 +18,18 @@ public class EncodeToWebP : MonoBehaviour
     {
         Error lError;
         Texture2D texture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: true, lLinear: true, lError: out lError);
-
-        if (lError == Error.Success)
-        {
-            image.texture = texture;
-        }
-        else
+        if (lError != Error.Success)
         {
             Debug.LogError("Webp Load Error : " + lError.ToString());
+            return;
         }
+
+        image.texture = texture;
     }
+
     void TestEncodeToWebP(RawImage fromImage, RawImage toImage)
     {
-        var texture = fromImage.texture;
+        Texture texture = fromImage.texture;
         RenderTexture tmp = RenderTexture.GetTemporary(
                             texture.width,
                             texture.height,
@@ -62,8 +61,8 @@ public class EncodeToWebP : MonoBehaviour
          // ref: https://github.com/netpyoung/unity.webp/issues/25
             Color[] pixels = myTexture2D.GetPixels();
             Color[] pixelsFlipped = new Color[pixels.Length];
-            var w = myTexture2D.width;
-            var h = myTexture2D.height;
+            int w = myTexture2D.width;
+            int h = myTexture2D.height;
             for (int y = 0; y < h; y++)
             {
                 Array.Copy(pixels, y * h, pixelsFlipped, (h - y - 1) * w, w);
@@ -72,13 +71,11 @@ public class EncodeToWebP : MonoBehaviour
         }
 
         byte[] bytes = myTexture2D.EncodeToWebP(25, out Error lError);
-        if (lError == Error.Success)
-        {
-            LoadWebp(ToImage, bytes);
-        }
-        else
+        if (lError != Error.Success)
         {
             Debug.LogError("Webp EncodeToWebP Error : " + lError.ToString());
+            return;
         }
+        LoadWebp(ToImage, bytes);
     }
 }
