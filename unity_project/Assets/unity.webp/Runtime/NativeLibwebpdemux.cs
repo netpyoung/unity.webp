@@ -10,7 +10,7 @@ namespace unity.libwebp
     {
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         const string DLL_NAME = "libwebpdemux";
-#elif UNITY_EDITOR || UNITY_STANDALONE_OSX
+#elif UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
         const string DLL_NAME = "webpdemux";
 #elif UNITY_ANDROID
 		const string DLL_NAME = "webpdemux";
