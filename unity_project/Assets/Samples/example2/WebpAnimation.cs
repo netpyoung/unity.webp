@@ -6,6 +6,7 @@ using unity.libwebp.Interop;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using WebP;
 
 public class WebpAnimation : MonoBehaviour
 {
@@ -82,7 +83,7 @@ public class WebpAnimation : MonoBehaviour
                 bool lMipmaps = false;
                 bool lLinear = false;
 
-                Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
+                Texture2D texture = Texture2DExt.CreateWebpTexture2D(lWidth, lHeight, lMipmaps, lLinear);
                 texture.LoadRawTextureData(pp, (int)size);
 
                 {// Flip updown.

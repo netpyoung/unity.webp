@@ -6,6 +6,7 @@ using unity.libwebp.Interop;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using WebP;
 
 public class WebpAnimationFix : MonoBehaviour
 {
@@ -87,7 +88,7 @@ public class WebpAnimationFix : MonoBehaviour
                 bool lMipmaps = false;
                 bool lLinear = false;
 
-                Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
+                Texture2D texture = Texture2DExt.CreateWebpTexture2D(lWidth, lHeight, lMipmaps, lLinear);
                 texture.LoadRawTextureData(pp, size);
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
                 ret.Add((texture, timestamp));
@@ -166,9 +167,9 @@ public class WebpAnimationFix : MonoBehaviour
                 int lWidth = (int)anim_info.canvas_width;
                 int lHeight = (int)anim_info.canvas_height;
                 bool lMipmaps = false;
-                bool lLinear = false;
+                bool lLinear = false; 
 
-                Texture2D texture = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
+                Texture2D texture = Texture2DExt.CreateWebpTexture2D(lWidth, lHeight, lMipmaps, lLinear);
                 texture.LoadRawTextureData((IntPtr)unmanagedPointer, size);
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
                 ret.Add((texture, timestamp));
@@ -253,7 +254,7 @@ public class WebpAnimationFix : MonoBehaviour
                     break;
                 }
 
-                Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, mipChain: false, linear: false);
+                Texture2D texture = Texture2DExt.CreateWebpTexture2D(width, height, isUseMipmap: false, isLinear: false);
                 texture.LoadRawTextureData((IntPtr)config.output.u.RGBA.rgba, size);
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
                 timestamp += iter.duration;

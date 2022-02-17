@@ -173,6 +173,17 @@ namespace WebP
             }
             return lRawData;
         }
+        public static Texture2D CreateWebpTexture2D(int width, int height, bool isUseMipmap, bool isLinear)
+        {
+            if (isUseMipmap)
+            {
+                return new Texture2D(width, height, TextureFormat.RGBA32, mipCount: 4, isLinear);
+            }
+            else
+            {
+                return new Texture2D(width, height, TextureFormat.RGBA32, mipChain: false, isLinear);
+            }
+        }
 
         /// <summary>
         /// 
@@ -191,7 +202,7 @@ namespace WebP
 
             if (lError == Error.Success)
             {
-                lTexture2D = new Texture2D(lWidth, lHeight, TextureFormat.RGBA32, lMipmaps, lLinear);
+                lTexture2D = CreateWebpTexture2D(lWidth, lHeight, lMipmaps, lLinear);
                 lTexture2D.LoadRawTextureData(lRawData);
                 lTexture2D.Apply(lMipmaps, makeNoLongerReadable);
             }

@@ -25,7 +25,7 @@ public class Example : MonoBehaviour
 
         Texture2DExt.GetWebPDimensions(webpBytes, out int width, out int height);
         
-        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, mipChain: true, linear: true);
+        Texture2D texture = Texture2DExt.CreateWebpTexture2D(width, height, isUseMipmap: true, isLinear: true);
         image.texture = texture;
 
         int numBytesRequired = Texture2DExt.GetRequireByteSize(width, height, isUseMipmap: true);
