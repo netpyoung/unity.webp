@@ -177,7 +177,10 @@ namespace WebP
         {
             if (isUseMipmap)
             {
-                return new Texture2D(width, height, TextureFormat.RGBA32, mipCount: 4, isLinear);
+                UnityEngine.Experimental.Rendering.GraphicsFormat graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormatUtility.GetGraphicsFormat(TextureFormat.RGBA32, false);
+                uint mipmapSize = UnityEngine.Experimental.Rendering.GraphicsFormatUtility.ComputeMipmapSize(width, height, graphicsFormat);
+                int mipmapCount = (int)mipmapSize / (width * height);
+                return new Texture2D(width, height, TextureFormat.RGBA32, mipCount: mipmapCount, isLinear);
             }
             else
             {
