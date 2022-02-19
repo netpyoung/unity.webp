@@ -13,29 +13,61 @@ namespace WebP
     [ScriptedImporter(1, "webp")]
     public class WebPImporter : ScriptedImporter
     {
-        public bool mipMaps = true;
-        public bool linear = false;
-        public TextureFormat textureFormat = TextureFormat.DXT5;
+        const TextureFormat WEBP_LOAD_DEFAULT_TEXTURE_FORMAT = TextureFormat.RGBA32;
+
+        [Tooltip("Is Generate Mipmap")]
+        public bool Mipmap = false;
+
+        [Tooltip("Is Linear ColorSpace")]
+        public bool Linear = false;
+
+        [Tooltip("Converted Texture Format")]
+        public TextureFormat TextureFormat = WEBP_LOAD_DEFAULT_TEXTURE_FORMAT;
 
         public override void OnImportAsset(AssetImportContext ctx)
         {
-            var bytes = File.ReadAllBytes(ctx.assetPath);
-            var webpTexture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: mipMaps, lLinear: linear, lError: out Error lError, makeNoLongerReadable: false);
-
+            byte[] bytes = File.ReadAllBytes(ctx.assetPath);
+            Texture2D webpTexture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: false, lLinear: Linear, lError: out Error lError, makeNoLongerReadable: false);
             if (lError != Error.Success)
             {
                 Debug.LogError("Error decoding WebP texture: " + lError);
-                var tex = new Texture2D(1, 1);
+                Texture2D tex = new Texture2D(1, 1);
                 tex.SetPixel(1, 1, Color.red);
                 ctx.AddObjectToAsset("main", tex);
                 ctx.SetMainObject(tex);
                 return;
             }
 
-            ctx.AddObjectToAsset("main", webpTexture);
-            ctx.SetMainObject(webpTexture);
-            webpTexture.alphaIsTransparency = true;
-            EditorUtility.CompressTexture(webpTexture, textureFormat, TextureCompressionQuality.Normal);
+            Texture2D targetTexture;
+            if (Mipmap)
+            {
+                int width = webpTexture.width;
+                int height = webpTexture.height;
+                UnityEngine.Experimental.Rendering.GraphicsFormat graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormatUtility.GetGraphicsFormat(TextureFormat.RGBA32, false);
+                uint mipmapSize = UnityEngine.Experimental.Rendering.GraphicsFormatUtility.ComputeMipmapSize(width, height, graphicsFormat);
+                int mipmapCount = (int)mipmapSize / (width * height);
+                targetTexture = new Texture2D(webpTexture.width, webpTexture.height, TextureFormat, mipCount: mipmapCount, linear: Linear);
+            }
+            else
+            {
+                targetTexture = new Texture2D(webpTexture.width, webpTexture.height, TextureFormat, mipCount: -1, linear: Linear);
+            }
+
+
+            bool isSuccess = targetTexture.LoadImage(webpTexture.EncodeToPNG());
+            if (!isSuccess)
+            {
+                Debug.LogError($"Error convert target texture format : {WEBP_LOAD_DEFAULT_TEXTURE_FORMAT} => {TextureFormat}");
+                Texture2D tex = new Texture2D(1, 1);
+                tex.SetPixel(1, 1, Color.red);
+                ctx.AddObjectToAsset("main", tex);
+                ctx.SetMainObject(tex);
+                return;
+            }
+
+            EditorUtility.CompressTexture(targetTexture, TextureFormat, TextureCompressionQuality.Normal);
+            ctx.AddObjectToAsset("main", targetTexture);
+            ctx.SetMainObject(targetTexture);
         }
     }
 }
