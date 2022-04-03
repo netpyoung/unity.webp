@@ -9,7 +9,7 @@
     "precompiledReferences": [
         "System.Runtime.CompilerServices.Unsafe.dll"
     ],
-    "autoReferenced": false,
+    "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
