@@ -21,6 +21,9 @@ namespace WebP
         [Tooltip("Is Linear ColorSpace")]
         public bool Linear = false;
 
+        [Tooltip("Should it generate a sprite, alongside the base texture?")]
+        public bool ShouldGenerateSprite = false;
+        
         [Tooltip("Converted Texture Format")]
         public TextureFormat TextureFormat = WEBP_LOAD_DEFAULT_TEXTURE_FORMAT;
 
@@ -68,6 +71,13 @@ namespace WebP
             EditorUtility.CompressTexture(targetTexture, TextureFormat, TextureCompressionQuality.Normal);
             ctx.AddObjectToAsset("main", targetTexture);
             ctx.SetMainObject(targetTexture);
+            
+            if (ShouldGenerateSprite) {
+                Rect spriteRect = new Rect(Vector2.zero, new Vector2(webpTexture.width, webpTexture.height));
+                Sprite sprite = Sprite.Create(targetTexture, spriteRect, Vector2.zero);
+                sprite.name = Path.GetFileNameWithoutExtension(ctx.assetPath);
+                ctx.AddObjectToAsset("sprite", sprite);
+            }
         }
     }
 }
