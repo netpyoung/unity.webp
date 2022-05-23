@@ -84,16 +84,18 @@ namespace unity.libwebp.Interop
             public void* e0;
             public void* e1;
 
-            public ref void* this[int index]
-            {
-                get
-                {
-                    fixed (void** pThis = &e0)
-                    {
-                        return ref pThis[index];
-                    }
-                }
-            }
+            // NOTE(pyoung): Comment out to avoid compile error
+            //   - ref: https://github.com/netpyoung/unity.webp/issues/44#issuecomment-1134680004
+            //public ref void* this[int index]
+            //{
+            //    get
+            //    {
+            //        fixed (void** pThis = &e0)
+            //        {
+            //            return ref pThis[index];
+            //        }
+            //    }
+            //}
         }
     }
 
