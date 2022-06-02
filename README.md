@@ -26,7 +26,7 @@ using `#{version}` for versioning.
 ex)
 
 ``` json
-"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.5"
+"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.6"
 ```
 
 ## Example
