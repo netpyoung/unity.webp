@@ -26,7 +26,7 @@ As a shared dependency, this uses the openUPM package `com.system-community.syst
 ```json
 {
   "dependencies": {
-    "com.netpyoung.webp": "0.3.6"
+    "com.netpyoung.webp": "0.3.7"
   },
   "scopedRegistries": [
     {
@@ -48,7 +48,7 @@ using `#{version}` for versioning.
 ex)
 
 ``` json
-"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.6",
+"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.7",
 "com.system-community.systemruntimecompilerservicesunsafe": "https://github.com/system-community/SystemRuntimeCompilerServicesUnsafe.git?path=Assets/_Root#6.0.0",
 
 ```
