@@ -19,6 +19,28 @@ choose your preference
 
 - [Download this .unitypackage from Release Page](https://github.com/netpyoung/unity.webp/releases)
 
+### using OpenUPM
+
+As a shared dependency, this uses the openUPM package `com.system-community.systemruntimecompilerservicesunsafe`, you will need to add it to OpenUPM's scopes, and it will be pulled in by this package.
+
+```json
+{
+  "dependencies": {
+    "com.netpyoung.webp": "0.3.6"
+  },
+  "scopedRegistries": [
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.netpyoung.webp",
+        "com.system-community.systemruntimecompilerservicesunsafe"
+      ]
+    }
+  ]
+}
+```
+
 ### using UPM
 
 using `#{version}` for versioning.
@@ -26,7 +48,9 @@ using `#{version}` for versioning.
 ex)
 
 ``` json
-"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.6"
+"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.6",
+"com.system-community.systemruntimecompilerservicesunsafe": "https://github.com/system-community/SystemRuntimeCompilerServicesUnsafe.git?path=Assets/_Root#6.0.0",
+
 ```
 
 ## Example
