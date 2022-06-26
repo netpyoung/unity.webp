@@ -16,6 +16,8 @@ namespace unity.libwebp
 		const string DLL_NAME = "webpdemux";
 #elif UNITY_IOS
 		const string DLL_NAME = "__Internal";
+#elif UNITY_WEBGL
+		const string DLL_NAME = "__Internal";
 #endif
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
