@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using unity.libwebp;
 using unity.libwebp.Interop;
 using UnityEngine;
@@ -12,7 +12,7 @@ public class WebpAnimation : MonoBehaviour
 {
     public RawImage image2;
 
-    private async void Start()
+    private IEnumerator Start()
     {
         List<(Texture2D, int)> lst = LoadAnimation("cat");
 
@@ -22,22 +22,25 @@ public class WebpAnimation : MonoBehaviour
             (Texture2D texture, int timestamp) = lst[i];
             if (image2 == null)
             {
-                return;
+                yield break;
             }
             image2.texture = texture;
             int delay = timestamp - prevTimestamp;
             prevTimestamp = timestamp;
+            
             if (delay < 0)
             {
                 delay = 0;
             }
-            await Task.Delay(delay);
+
+            yield return new WaitForSeconds(delay / 1000.0f);
             if (i == lst.Count - 1)
             {
                 i = -1;
             }
         }
     }
+
     private unsafe List<(Texture2D, int)> LoadAnimation(string loadPath)
     {
         List<(Texture2D, int)> ret = new List<(Texture2D, int)>();
