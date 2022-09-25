@@ -6,8 +6,5 @@
   "description": "webp made easy for Unity3d.",
   "keywords": ["webp","unity.webp"],
   "license": "MIT",
-  "category": "image",
-  "dependencies": {
-    "com.system-community.systemruntimecompilerservicesunsafe": "6.0.0"
-  }
+  "category": "image"
 }

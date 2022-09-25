@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.system-community.systemruntimecompilerservicesunsafe": {
-      "version": "https://github.com/system-community/SystemRuntimeCompilerServicesUnsafe.git?path=Assets/_Root#6.0.0",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "85fa84e534a422b09e7f1f334735e73215cb17f5"
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -79,6 +72,13 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "org.nuget.system.runtime.compilerservices.unsafe": {
+      "version": "6.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.azurewebsites.net"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
