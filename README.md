@@ -15,28 +15,6 @@
 
 choose your preference
 
-### using OpenUPM
-
-As a shared dependency, this uses the openUPM package `com.system-community.systemruntimecompilerservicesunsafe`, you will need to add it to OpenUPM's scopes, and it will be pulled in by this package.
-
-```json
-{
-  "dependencies": {
-    "com.netpyoung.webp": "0.3.8"
-  },
-  "scopedRegistries": [
-    {
-      "name": "package.openupm.com",
-      "url": "https://package.openupm.com",
-      "scopes": [
-        "com.netpyoung.webp",
-        "com.system-community.systemruntimecompilerservicesunsafe"
-      ]
-    }
-  ]
-}
-```
-
 ### using UPM
 
 using `#{version}` for versioning.
@@ -44,9 +22,21 @@ using `#{version}` for versioning.
 ex)
 
 ``` json
-"com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.8",
-"com.system-community.systemruntimecompilerservicesunsafe": "https://github.com/system-community/SystemRuntimeCompilerServicesUnsafe.git?path=Assets/_Root#6.0.0",
-
+{
+  "dependencies": {
+    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.9",
+    "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
+  },
+  "scopedRegistries": [
+    {
+      "name": "Unity NuGet",
+      "url": "https://unitynuget-registry.azurewebsites.net",
+      "scopes": [
+        "org.nuget"
+      ]
+    }
+  ]
+}
 ```
 
 ## Example
