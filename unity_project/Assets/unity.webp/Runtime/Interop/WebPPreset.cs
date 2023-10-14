@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WebPPreset
+    [NativeTypeName("unsigned int")]
+    public enum WebPPreset : uint
     {
         WEBP_PRESET_DEFAULT = 0,
         WEBP_PRESET_PICTURE,

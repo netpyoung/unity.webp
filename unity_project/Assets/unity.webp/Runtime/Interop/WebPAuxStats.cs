@@ -4,25 +4,25 @@ namespace unity.libwebp.Interop
     {
         public int coded_size;
 
-        [NativeTypeName("float [5]")]
+        [NativeTypeName("float[5]")]
         public fixed float PSNR[5];
 
-        [NativeTypeName("int [3]")]
+        [NativeTypeName("int[3]")]
         public fixed int block_count[3];
 
-        [NativeTypeName("int [2]")]
+        [NativeTypeName("int[2]")]
         public fixed int header_bytes[2];
 
-        [NativeTypeName("int [3][4]")]
+        [NativeTypeName("int[3][4]")]
         public fixed int residual_bytes[3 * 4];
 
-        [NativeTypeName("int [4]")]
+        [NativeTypeName("int[4]")]
         public fixed int segment_size[4];
 
-        [NativeTypeName("int [4]")]
+        [NativeTypeName("int[4]")]
         public fixed int segment_quant[4];
 
-        [NativeTypeName("int [4]")]
+        [NativeTypeName("int[4]")]
         public fixed int segment_level[4];
 
         public int alpha_data_size;
@@ -46,7 +46,7 @@ namespace unity.libwebp.Interop
 
         public int lossless_data_size;
 
-        [NativeTypeName("uint32_t [2]")]
+        [NativeTypeName("uint32_t[2]")]
         public fixed uint pad[2];
     }
 }

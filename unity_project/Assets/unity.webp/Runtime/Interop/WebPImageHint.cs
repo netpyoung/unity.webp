@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WebPImageHint
+    [NativeTypeName("unsigned int")]
+    public enum WebPImageHint : uint
     {
         WEBP_HINT_DEFAULT = 0,
         WEBP_HINT_PICTURE,

@@ -1,5 +1,3 @@
-using System;
-
 namespace unity.libwebp.Interop
 {
     public partial struct WebPDemuxer

@@ -30,7 +30,7 @@ namespace unity.libwebp.Interop
 
         public int a_stride;
 
-        [NativeTypeName("uint32_t [2]")]
+        [NativeTypeName("uint32_t[2]")]
         public fixed uint pad1[2];
 
         [NativeTypeName("uint32_t *")]
@@ -38,7 +38,7 @@ namespace unity.libwebp.Interop
 
         public int argb_stride;
 
-        [NativeTypeName("uint32_t [3]")]
+        [NativeTypeName("uint32_t[3]")]
         public fixed uint pad2[3];
 
         [NativeTypeName("WebPWriterFunction")]
@@ -60,7 +60,7 @@ namespace unity.libwebp.Interop
 
         public void* user_data;
 
-        [NativeTypeName("uint32_t [3]")]
+        [NativeTypeName("uint32_t[3]")]
         public fixed uint pad3[3];
 
         [NativeTypeName("uint8_t *")]
@@ -69,7 +69,7 @@ namespace unity.libwebp.Interop
         [NativeTypeName("uint8_t *")]
         public byte* pad5;
 
-        [NativeTypeName("uint32_t [8]")]
+        [NativeTypeName("uint32_t[8]")]
         public fixed uint pad6[8];
 
         public void* memory_;

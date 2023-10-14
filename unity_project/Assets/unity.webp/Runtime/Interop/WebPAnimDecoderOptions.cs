@@ -6,7 +6,7 @@ namespace unity.libwebp.Interop
 
         public int use_threads;
 
-        [NativeTypeName("uint32_t [7]")]
+        [NativeTypeName("uint32_t[7]")]
         public fixed uint padding[7];
     }
 }

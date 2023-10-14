@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WebPEncodingError
+    [NativeTypeName("unsigned int")]
+    public enum WebPEncodingError : uint
     {
         VP8_ENC_OK = 0,
         VP8_ENC_ERROR_OUT_OF_MEMORY,

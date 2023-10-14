@@ -1,5 +1,3 @@
-using System;
-
 namespace unity.libwebp.Interop
 {
     public unsafe partial struct WebPIterator
@@ -28,7 +26,7 @@ namespace unity.libwebp.Interop
 
         public WebPMuxAnimBlend blend_method;
 
-        [NativeTypeName("uint32_t [2]")]
+        [NativeTypeName("uint32_t[2]")]
         public fixed uint pad[2];
 
         public void* private_;

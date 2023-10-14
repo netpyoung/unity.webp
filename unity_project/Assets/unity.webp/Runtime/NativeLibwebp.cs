@@ -247,7 +247,7 @@ namespace unity.libwebp
         public static extern int WebPPlaneDistortion([NativeTypeName("const uint8_t *")] byte* src, [NativeTypeName("size_t")] UIntPtr src_stride, [NativeTypeName("const uint8_t *")] byte* @ref, [NativeTypeName("size_t")] UIntPtr ref_stride, int width, int height, [NativeTypeName("size_t")] UIntPtr x_step, int type, float* distortion, float* result);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int WebPPictureDistortion([NativeTypeName("const WebPPicture *")] WebPPicture* src, [NativeTypeName("const WebPPicture *")] WebPPicture* @ref, int metric_type, [NativeTypeName("float [5]")] float* result);
+        public static extern int WebPPictureDistortion([NativeTypeName("const WebPPicture *")] WebPPicture* src, [NativeTypeName("const WebPPicture *")] WebPPicture* @ref, int metric_type, [NativeTypeName("float[5]")] float* result);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int WebPPictureCrop(WebPPicture* picture, int left, int top, int width, int height);
@@ -259,7 +259,7 @@ namespace unity.libwebp
         public static extern int WebPPictureIsView([NativeTypeName("const WebPPicture *")] WebPPicture* picture);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int WebPPictureRescale(WebPPicture* pic, int width, int height);
+        public static extern int WebPPictureRescale(WebPPicture* picture, int width, int height);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int WebPPictureImportRGB(WebPPicture* picture, [NativeTypeName("const uint8_t *")] byte* rgb, int rgb_stride);
@@ -301,7 +301,7 @@ namespace unity.libwebp
         public static extern int WebPPictureHasTransparency([NativeTypeName("const WebPPicture *")] WebPPicture* picture);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern void WebPBlendAlpha(WebPPicture* pic, [NativeTypeName("uint32_t")] uint background_rgb);
+        public static extern void WebPBlendAlpha(WebPPicture* picture, [NativeTypeName("uint32_t")] uint background_rgb);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int WebPEncode([NativeTypeName("const WebPConfig *")] WebPConfig* config, WebPPicture* picture);
@@ -312,10 +312,10 @@ namespace unity.libwebp
         [NativeTypeName("#define WEBP_MAX_DIMENSION 16383")]
         public const int WEBP_MAX_DIMENSION = 16383;
 
-        //public static int CheckSizeOverflow([NativeTypeName("uint64_t")] ulong size)
-        //{
-        //    return (size == (UIntPtr)(size)) ? 1 : 0;
-        //}
+        public static int CheckSizeOverflow([NativeTypeName("uint64_t")] ulong size)
+        {
+            return (size == (nuint)(size)) ? 1 : 0;
+        }
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void* WebPSafeMalloc([NativeTypeName("uint64_t")] ulong nmemb, [NativeTypeName("size_t")] UIntPtr size);
@@ -326,71 +326,76 @@ namespace unity.libwebp
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void WebPSafeFree([NativeTypeName("void *const")] void* ptr);
 
-        //[return: NativeTypeName("uint32_t")]
-        //public static uint WebPMemToUint32([NativeTypeName("const uint8_t *const")] byte* ptr)
-        //{
-        //    uint A;
+        // [return: NativeTypeName("uint32_t")]
+        // public static uint WebPMemToUint32([NativeTypeName("const uint8_t *const")] byte* ptr)
+        // {
+        //     uint A;
 
-        //    Unsafe.CopyBlockUnaligned(&A, ptr, sizeof(uint));
-        //    return A;
-        //}
+        //     Unsafe.CopyBlockUnaligned(&A, ptr, (uint)(sizeof(uint)));
+        //     return A;
+        // }
 
-        //public static void WebPUint32ToMem([NativeTypeName("uint8_t *const")] byte* ptr, [NativeTypeName("uint32_t")] uint val)
-        //{
-        //    Unsafe.CopyBlockUnaligned(ptr, &val, sizeof(uint));
-        //}
+        // [return: NativeTypeName("int32_t")]
+        // public static int WebPMemToInt32([NativeTypeName("const uint8_t *const")] byte* ptr)
+        // {
+        //     return (int)(WebPMemToUint32(ptr));
+        // }
 
-        //public static int GetLE16([NativeTypeName("const uint8_t *const")] byte* data)
-        //{
-        //    return (int)(data[0] << 0) | (data[1] << 8);
-        //}
+        // public static void WebPUint32ToMem([NativeTypeName("uint8_t *")] byte* ptr, [NativeTypeName("uint32_t")] uint val)
+        // {
+        //     Unsafe.CopyBlockUnaligned(ptr, &val, (uint)(sizeof(uint)));
+        // }
 
-        //public static int GetLE24([NativeTypeName("const uint8_t *const")] byte* data)
-        //{
-        //    return GetLE16(data) | (data[2] << 16);
-        //}
+        // public static void WebPInt32ToMem([NativeTypeName("uint8_t *")] byte* ptr, int val)
+        // {
+        //     WebPUint32ToMem(ptr, unchecked((uint)(val)));
+        // }
 
-        //[return: NativeTypeName("uint32_t")]
-        //public static uint GetLE32([NativeTypeName("const uint8_t *const")] byte* data)
-        //{
-        //    return GetLE16(data) | ((uint)(GetLE16(data + 2)) << 16);
-        //}
+        // public static int GetLE16([NativeTypeName("const uint8_t *const")] byte* data)
+        // {
+        //     return (int)(data[0] << 0) | (data[1] << 8);
+        // }
 
-        //public static void PutLE16([NativeTypeName("uint8_t *const")] byte* data, int val)
-        //{
-        //    (void)((!!(val < (1 << 16))) || (_wassert(, , (uint)(98)), 0) != 0);
-        //    data[0] = (val >> 0) & 0xff;
-        //    data[1] = (val >> 8) & 0xff;
-        //}
+        // public static int GetLE24([NativeTypeName("const uint8_t *const")] byte* data)
+        // {
+        //     return GetLE16(data) | (data[2] << 16);
+        // }
 
-        //public static void PutLE24([NativeTypeName("uint8_t *const")] byte* data, int val)
-        //{
-        //    (void)((!!(val < (1 << 24))) || (_wassert(, , (uint)(104)), 0) != 0);
-        //    PutLE16(data, val & 0xffff);
-        //    data[2] = (val >> 16) & 0xff;
-        //}
+        // [return: NativeTypeName("uint32_t")]
+        // public static uint GetLE32([NativeTypeName("const uint8_t *const")] byte* data)
+        // {
+        //     return GetLE16(data) | ((uint)(GetLE16(data + 2)) << 16);
+        // }
 
-        //public static void PutLE32([NativeTypeName("uint8_t *const")] byte* data, [NativeTypeName("uint32_t")] uint val)
-        //{
-        //    PutLE16(data, (int)(val & 0xffff));
-        //    PutLE16(data + 2, (int)(val >> 16));
-        //}
+        // public static void PutLE16([NativeTypeName("uint8_t *")] byte* data, int val)
+        // {
+        //     ((__builtin_expect((!(val < (1 << 16))) ? 1 : 0, 0)) != 0 ? __assert_rtn(, new byte[] { 0x75, 0x74, 0x69, 0x6C, 0x73, 0x2E, 0x68, 0x00 }, 106, new byte[] { 0x76, 0x61, 0x6C, 0x20, 0x3C, 0x20, 0x28, 0x31, 0x20, 0x3C, 0x3C, 0x20, 0x31, 0x36, 0x29, 0x00 }) : (void)(0));
+        //     data[0] = (val >> 0) & 0xff;
+        //     data[1] = (val >> 8) & 0xff;
+        // }
 
-        //public static int BitsLog2Floor([NativeTypeName("uint32_t")] uint n)
-        //{
-        //    UIntPtr first_set_bit;
+        // public static void PutLE24([NativeTypeName("uint8_t *")] byte* data, int val)
+        // {
+        //     ((__builtin_expect((!(val < (1 << 24))) ? 1 : 0, 0)) != 0 ? __assert_rtn(, new byte[] { 0x75, 0x74, 0x69, 0x6C, 0x73, 0x2E, 0x68, 0x00 }, 112, new byte[] { 0x76, 0x61, 0x6C, 0x20, 0x3C, 0x20, 0x28, 0x31, 0x20, 0x3C, 0x3C, 0x20, 0x32, 0x34, 0x29, 0x00 }) : (void)(0));
+        //     PutLE16(data, val & 0xffff);
+        //     data[2] = (val >> 16) & 0xff;
+        // }
 
-        //    _BitScanReverse(&first_set_bit, n);
-        //    return first_set_bit;
-        //}
+        // public static void PutLE32([NativeTypeName("uint8_t *")] byte* data, [NativeTypeName("uint32_t")] uint val)
+        // {
+        //     PutLE16(data, (int)(val & 0xffff));
+        //     PutLE16(data + 2, (int)(val >> 16));
+        // }
 
-        //public static int BitsCtz([NativeTypeName("uint32_t")] uint n)
-        //{
-        //    UIntPtr first_set_bit;
+        // public static int BitsLog2Floor([NativeTypeName("uint32_t")] uint n)
+        // {
+        //     return 31 ^ __builtin_clz(n);
+        // }
 
-        //    _BitScanForward(&first_set_bit, n);
-        //    return first_set_bit;
-        //}
+        // public static int BitsCtz([NativeTypeName("uint32_t")] uint n)
+        // {
+        //     return __builtin_ctz(n);
+        // }
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern void WebPCopyPlane([NativeTypeName("const uint8_t *")] byte* src, int src_stride, [NativeTypeName("uint8_t *")] byte* dst, int dst_stride, int width, int height);
@@ -399,7 +404,17 @@ namespace unity.libwebp
         public static extern void WebPCopyPixels([NativeTypeName("const struct WebPPicture *const")] WebPPicture* src, [NativeTypeName("struct WebPPicture *const")] WebPPicture* dst);
 
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int WebPGetColorPalette([NativeTypeName("const struct WebPPicture *const")] WebPPicture* pic, [NativeTypeName("uint32_t *const")] uint* palette);
+        public static extern int WebPGetColorPalette([NativeTypeName("const struct WebPPicture *const")] WebPPicture* pic, [NativeTypeName("uint32_t *")] uint* palette);
+
+        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        [return: NativeTypeName("long")]
+        public static extern IntPtr __builtin_expect([NativeTypeName("long")] IntPtr param0, [NativeTypeName("long")] IntPtr param1);
+
+        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int __builtin_clz([NativeTypeName("unsigned int")] uint param0);
+
+        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        public static extern int __builtin_ctz([NativeTypeName("unsigned int")] uint param0);
 
         [NativeTypeName("#define WEBP_MAX_ALLOCABLE_MEMORY (1ULL << 34)")]
         public const ulong WEBP_MAX_ALLOCABLE_MEMORY = (1UL << 34);

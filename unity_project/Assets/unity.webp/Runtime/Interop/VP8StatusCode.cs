@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum VP8StatusCode
+    [NativeTypeName("unsigned int")]
+    public enum VP8StatusCode : uint
     {
         VP8_STATUS_OK = 0,
         VP8_STATUS_OUT_OF_MEMORY,

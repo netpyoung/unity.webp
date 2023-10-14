@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WebPFormatFeature
+    [NativeTypeName("unsigned int")]
+    public enum WebPFormatFeature : uint
     {
         WEBP_FF_FORMAT_FLAGS,
         WEBP_FF_CANVAS_WIDTH,

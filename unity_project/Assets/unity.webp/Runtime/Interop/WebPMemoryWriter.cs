@@ -13,7 +13,7 @@ namespace unity.libwebp.Interop
         [NativeTypeName("size_t")]
         public UIntPtr max_size;
 
-        [NativeTypeName("uint32_t [1]")]
+        [NativeTypeName("uint32_t[1]")]
         public fixed uint pad[1];
     }
 }

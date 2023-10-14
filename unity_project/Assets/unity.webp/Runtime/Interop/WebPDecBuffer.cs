@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.InteropServices;
 
 namespace unity.libwebp.Interop
@@ -13,10 +12,10 @@ namespace unity.libwebp.Interop
 
         public int is_external_memory;
 
-        [NativeTypeName("union (anonymous union at libwebp/src/webp/decode.h:207:3)")]
+        [NativeTypeName("__AnonymousRecord_decode_L208_C3")]
         public _u_e__Union u;
 
-        [NativeTypeName("uint32_t [4]")]
+        [NativeTypeName("uint32_t[4]")]
         public fixed uint pad[4];
 
         [NativeTypeName("uint8_t *")]

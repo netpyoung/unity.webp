@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WebPEncCSP
+    [NativeTypeName("unsigned int")]
+    public enum WebPEncCSP : uint
     {
         WEBP_YUV420 = 0,
         WEBP_YUV420A = 4,

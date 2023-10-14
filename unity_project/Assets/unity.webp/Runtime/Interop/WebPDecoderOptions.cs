@@ -30,7 +30,7 @@ namespace unity.libwebp.Interop
 
         public int alpha_dithering_strength;
 
-        [NativeTypeName("uint32_t [5]")]
+        [NativeTypeName("uint32_t[5]")]
         public fixed uint pad[5];
     }
 }

@@ -17,7 +17,7 @@ namespace unity.libwebp.Interop
         [NativeTypeName("uint32_t")]
         public uint frame_count;
 
-        [NativeTypeName("uint32_t [4]")]
+        [NativeTypeName("uint32_t[4]")]
         public fixed uint pad[4];
     }
 }

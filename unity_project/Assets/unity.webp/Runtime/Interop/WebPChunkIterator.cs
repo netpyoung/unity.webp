@@ -1,5 +1,3 @@
-using System;
-
 namespace unity.libwebp.Interop
 {
     public unsafe partial struct WebPChunkIterator
@@ -10,7 +8,7 @@ namespace unity.libwebp.Interop
 
         public WebPData chunk;
 
-        [NativeTypeName("uint32_t [6]")]
+        [NativeTypeName("uint32_t[6]")]
         public fixed uint pad[6];
 
         public void* private_;

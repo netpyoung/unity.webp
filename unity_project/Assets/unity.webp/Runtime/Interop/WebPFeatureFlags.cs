@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WebPFeatureFlags
+    [NativeTypeName("unsigned int")]
+    public enum WebPFeatureFlags : uint
     {
         ANIMATION_FLAG = 0x00000002,
         XMP_FLAG = 0x00000004,

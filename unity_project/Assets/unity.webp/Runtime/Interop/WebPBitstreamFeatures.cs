@@ -12,7 +12,7 @@ namespace unity.libwebp.Interop
 
         public int format;
 
-        [NativeTypeName("uint32_t [5]")]
+        [NativeTypeName("uint32_t[5]")]
         public fixed uint pad[5];
     }
 }

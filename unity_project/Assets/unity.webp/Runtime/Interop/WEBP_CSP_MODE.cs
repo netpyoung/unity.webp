@@ -1,6 +1,7 @@
 namespace unity.libwebp.Interop
 {
-    public enum WEBP_CSP_MODE
+    [NativeTypeName("unsigned int")]
+    public enum WEBP_CSP_MODE : uint
     {
         MODE_RGB = 0,
         MODE_RGBA = 1,
