@@ -9,7 +9,7 @@
 ## prebuilt library
 
 - prebuilt library are maintained by [prebuilt-libwebp](https://github.com/netpyoung/prebuilt-libwebp)
-  - libwebp version v1.2.2
+  - libwebp version v1.3.2
 
 ## installation
 
