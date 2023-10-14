@@ -6,12 +6,15 @@ unix-types
 log-visited-files
 --include-directory
 libwebp
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/
 --file-directory 
 libwebp
 --file
 src/webp/demux.h
 src/webp/mux_types.h
 src/webp/types.h
+src/demux/anim_decode.c
+src/demux/demux.c
 --namespace
 unity.libwebp.Interop
 --libraryPath

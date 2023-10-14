@@ -6,6 +6,7 @@ unix-types
 log-visited-files
 --include-directory
 libwebp
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk/usr/include/
 --file-directory 
 libwebp
 --file
@@ -13,7 +14,7 @@ src/webp/decode.h
 src/webp/encode.h
 src/utils/utils.h
 --namespace
-unity.libwebp.Interop.InteropLibwebp
+unity.libwebp.Interop
 --libraryPath
 REPLACE_IT
 --output
