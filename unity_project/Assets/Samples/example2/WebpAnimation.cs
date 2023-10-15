@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using unity.libwebp;
 using unity.libwebp.Interop;
 using UnityEngine;
@@ -10,30 +10,37 @@ using WebP;
 
 public class WebpAnimation : MonoBehaviour
 {
+    public RawImage image1;
     public RawImage image2;
 
-    private IEnumerator Start()
+    private void Start()
     {
-        List<(Texture2D, int)> lst = LoadAnimation("cat");
+        _ = Example_ShowSoftwareFlipAsync(image1);
+        _ = Example_ShowShaderFlipAsync(image2);
+    }
+
+    private async Task Example_ShowSoftwareFlipAsync(RawImage image)
+    {
+        List<(Texture2D, int)> lst = LoadAnimation("cat", isUsingSoftwareFlip: true);
 
         int prevTimestamp = 0;
         for (int i = 0; i < lst.Count; ++i)
         {
             (Texture2D texture, int timestamp) = lst[i];
-            if (image2 == null)
+            if (image == null)
             {
-                yield break;
+                await Task.Yield();
             }
-            image2.texture = texture;
+            image.texture = texture;
             int delay = timestamp - prevTimestamp;
             prevTimestamp = timestamp;
-            
+
             if (delay < 0)
             {
                 delay = 0;
             }
 
-            yield return new WaitForSeconds(delay / 1000.0f);
+            await Task.Delay(delay);
             if (i == lst.Count - 1)
             {
                 i = -1;
@@ -41,7 +48,36 @@ public class WebpAnimation : MonoBehaviour
         }
     }
 
-    private unsafe List<(Texture2D, int)> LoadAnimation(string loadPath)
+    private async Task Example_ShowShaderFlipAsync(RawImage image)
+    {
+        List<(Texture2D, int)> lst = LoadAnimation("cat", isUsingSoftwareFlip: false);
+
+        int prevTimestamp = 0;
+        for (int i = 0; i < lst.Count; ++i)
+        {
+            (Texture2D texture, int timestamp) = lst[i];
+            if (image == null)
+            {
+                await Task.Yield();
+            }
+            image.texture = texture;
+            int delay = timestamp - prevTimestamp;
+            prevTimestamp = timestamp;
+
+            if (delay < 0)
+            {
+                delay = 0;
+            }
+
+            await Task.Delay(delay);
+            if (i == lst.Count - 1)
+            {
+                i = -1;
+            }
+        }
+    }
+
+    private unsafe List<(Texture2D, int)> LoadAnimation(string loadPath, bool isUsingSoftwareFlip = false)
     {
         List<(Texture2D, int)> ret = new List<(Texture2D, int)>();
         TextAsset textasset = Resources.Load<TextAsset>(loadPath);
@@ -89,6 +125,7 @@ public class WebpAnimation : MonoBehaviour
                 Texture2D texture = Texture2DExt.CreateWebpTexture2D(lWidth, lHeight, lMipmaps, lLinear);
                 texture.LoadRawTextureData(pp, (int)size);
 
+                if (isUsingSoftwareFlip)
                 {// Flip updown.
                  // ref: https://github.com/netpyoung/unity.webp/issues/25
                  // ref: https://github.com/netpyoung/unity.webp/issues/21

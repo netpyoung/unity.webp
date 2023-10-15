@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.UI;
 using WebP;
 
@@ -25,7 +24,7 @@ public class Example : MonoBehaviour
 
         Texture2DExt.GetWebPDimensions(webpBytes, out int width, out int height);
         
-        Texture2D texture = Texture2DExt.CreateWebpTexture2D(width, height, isUseMipmap: true, isLinear: true);
+        Texture2D texture = Texture2DExt.CreateWebpTexture2D(width, height, isUseMipmap: true, isLinear: false);
         image.texture = texture;
 
         int numBytesRequired = Texture2DExt.GetRequireByteSize(width, height, isUseMipmap: true);
@@ -40,7 +39,7 @@ public class Example : MonoBehaviour
         var textasset = Resources.Load<TextAsset>("webp");
         var bytes = textasset.bytes;
 
-        Texture2D texture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: true, lLinear: true, lError: out Error lError);
+        Texture2D texture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: true, lLinear: false, lError: out Error lError);
 
         if (lError == Error.Success)
         {

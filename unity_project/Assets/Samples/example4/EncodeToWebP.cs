@@ -10,14 +10,15 @@ public class EncodeToWebP : MonoBehaviour
 
     void Start()
     {
-        LoadWebp(FromImage, Resources.Load<TextAsset>("webp").bytes);
+        byte[] webpBytes = Resources.Load<TextAsset>("webp").bytes;
+        LoadWebp(FromImage, webpBytes, isLinear: false);
         TestEncodeToWebP(FromImage, ToImage);
     }
 
-    void LoadWebp(RawImage image, byte[] bytes)
+    void LoadWebp(RawImage image, byte[] bytes, bool isLinear)
     {
         Error lError;
-        Texture2D texture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: true, lLinear: true, lError: out lError);
+        Texture2D texture = Texture2DExt.CreateTexture2DFromWebP(bytes, lMipmaps: true, lLinear: isLinear, lError: out lError);
         if (lError != Error.Success)
         {
             Debug.LogError("Webp Load Error : " + lError.ToString());
@@ -76,6 +77,6 @@ public class EncodeToWebP : MonoBehaviour
             Debug.LogError("Webp EncodeToWebP Error : " + lError.ToString());
             return;
         }
-        LoadWebp(ToImage, bytes);
+        LoadWebp(toImage, bytes, isLinear: true);
     }
 }
