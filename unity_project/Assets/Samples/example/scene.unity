@@ -152,7 +152,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.41176474, g: 0.38431376, b: 0.3647059, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 170373109}
   - component: {fileID: 170373108}
   m_Layer: 5
-  m_Name: image3
+  m_Name: img_WebpUsingPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 651955352}
   - component: {fileID: 651955351}
   m_Layer: 5
-  m_Name: image2
+  m_Name: img_Webp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -423,9 +423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da470d719fc649fd97cbb35f6f5cf88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image1: {fileID: 1018053774}
-  image2: {fileID: 651955351}
-  image3: {fileID: 170373108}
+  _img_Origin: {fileID: 1018053774}
+  _img_Webp: {fileID: 651955351}
+  _img_WebpUsingPool: {fileID: 170373108}
 --- !u!1 &1018053772
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 1018053775}
   - component: {fileID: 1018053774}
   m_Layer: 5
-  m_Name: image1
+  m_Name: img_Origin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

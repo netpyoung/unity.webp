@@ -262,7 +262,7 @@ GameObject:
   - component: {fileID: 440293329}
   - component: {fileID: 440293328}
   m_Layer: 5
-  m_Name: RawImage (1)
+  m_Name: img_ShaderFlip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -367,8 +367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ced891587fd9dd4ebda2ef84da6220a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image1: {fileID: 1158216959}
-  image2: {fileID: 440293328}
+  _img_SoftwareFlip: {fileID: 1158216959}
+  _img_ShaderFlip: {fileID: 440293328}
 --- !u!1 &1069919435
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 1158216960}
   - component: {fileID: 1158216959}
   m_Layer: 5
-  m_Name: RawImage
+  m_Name: img_SoftwareFlip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
