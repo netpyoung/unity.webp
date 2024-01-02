@@ -406,15 +406,15 @@ namespace unity.libwebp
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
         public static extern int WebPGetColorPalette([NativeTypeName("const struct WebPPicture *const")] WebPPicture* pic, [NativeTypeName("uint32_t *")] uint* palette);
 
-        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        [return: NativeTypeName("long")]
-        public static extern IntPtr __builtin_expect([NativeTypeName("long")] IntPtr param0, [NativeTypeName("long")] IntPtr param1);
+        // [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        // [return: NativeTypeName("long")]
+        // public static extern IntPtr __builtin_expect([NativeTypeName("long")] IntPtr param0, [NativeTypeName("long")] IntPtr param1);
 
-        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int __builtin_clz([NativeTypeName("unsigned int")] uint param0);
+        // [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        // public static extern int __builtin_clz([NativeTypeName("unsigned int")] uint param0);
 
-        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
-        public static extern int __builtin_ctz([NativeTypeName("unsigned int")] uint param0);
+        // [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+        // public static extern int __builtin_ctz([NativeTypeName("unsigned int")] uint param0);
 
         [NativeTypeName("#define WEBP_MAX_ALLOCABLE_MEMORY (1ULL << 34)")]
         public const ulong WEBP_MAX_ALLOCABLE_MEMORY = (1UL << 34);
