@@ -13,19 +13,38 @@
 
 ## installation
 
-choose your preference
+Choose your preference:
 
-### using UPM
+### Using OpenUPM installer
 
-using `#{version}` for versioning.
+Download and install via the [Package Installer](http://package-installer.glitch.me/v1/installer/OpenUPM/com.netpyoung.webp?registry=https://package.openupm.com). No manual registry setup is needed. 
 
-ex)
+### Using OpenUPM manually
 
 ``` json
 {
   "dependencies": {
-    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.10",
-    "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
+    "com.netpyoung.webp": "0.3.10"
+  },
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.netpyoung.webp",
+        "org.nuget.system.runtime.compilerservices.unsafe"
+      ]
+    }
+  ]
+}
+```
+
+### Using UPM from GitHub and Unity NuGet
+
+``` json
+{
+  "dependencies": {
+    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.10"
   },
   "scopedRegistries": [
     {
