@@ -1,7 +1,7 @@
 {
   "name": "com.netpyoung.webp",
   "displayName": "Unity.WebP",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "unity": "2018.4",
   "description": "webp made easy for Unity3d.",
   "keywords": ["webp","unity.webp"],
