@@ -8,7 +8,7 @@ namespace unity.libwebp
 {
     public static unsafe partial class NativeLibwebp
     {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_WSA
         const string DLL_NAME = "libwebp";
 #elif UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
         const string DLL_NAME = "webp";
