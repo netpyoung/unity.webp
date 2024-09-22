@@ -8,7 +8,6 @@
         "iOS",
         "LinuxStandalone64",
         "macOSStandalone",
-        "WSA",
         "WebGL",
         "WindowsStandalone32",
         "WindowsStandalone64"
