@@ -86,7 +86,8 @@ extern "C" {
 // set so should succeed on one of the earlier tests.
 #if (defined(__SSE2__) || defined(WEBP_MSC_SSE2)) && \
     (!defined(HAVE_CONFIG_H) || defined(WEBP_HAVE_SSE2))
-#define WEBP_USE_SSE2
+// HOTFIX(pyoung): to support Target WebAssembly 2023 . https://github.com/netpyoung/unity.webp/issues/75
+//#define WEBP_USE_SSE2
 #endif
 
 #if defined(WEBP_USE_SSE2) && !defined(WEBP_HAVE_SSE2)
@@ -95,7 +96,8 @@ extern "C" {
 
 #if (defined(__SSE4_1__) || defined(WEBP_MSC_SSE41)) && \
     (!defined(HAVE_CONFIG_H) || defined(WEBP_HAVE_SSE41))
-#define WEBP_USE_SSE41
+// HOTFIX(pyoung): to support Target WebAssembly 2023 . https://github.com/netpyoung/unity.webp/issues/75
+//#define WEBP_USE_SSE41
 #endif
 
 #if defined(WEBP_USE_SSE41) && !defined(WEBP_HAVE_SSE41)
