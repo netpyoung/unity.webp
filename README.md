@@ -9,7 +9,7 @@
 ## prebuilt library
 
 - prebuilt library are maintained by [prebuilt-libwebp](https://github.com/netpyoung/prebuilt-libwebp)
-  - libwebp version v1.3.2
+  - libwebp version v1.5.0
 
 ## installation
 
@@ -24,7 +24,7 @@ Download and install via the [Package Installer](http://package-installer.glitch
 ``` json
 {
   "dependencies": {
-    "com.netpyoung.webp": "0.3.15"
+    "com.netpyoung.webp": "0.3.16"
   },
   "scopedRegistries": [
     {
@@ -44,7 +44,7 @@ Download and install via the [Package Installer](http://package-installer.glitch
 ``` json
 {
   "dependencies": {
-    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.15"
+    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.16"
   },
   "scopedRegistries": [
     {
