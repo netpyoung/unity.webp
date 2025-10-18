@@ -129,6 +129,8 @@ MonoBehaviour:
   m_PrefilterScreenCoord: 1
   m_PrefilterNativeRenderPass: 1
   m_PrefilterUseLegacyLightmaps: 0
+  m_PrefilterReflectionProbeBlending: 1
+  m_PrefilterReflectionProbeBoxProjection: 1
   m_ShaderVariantLogLevel: 0
   m_ShadowCascades: 0
   m_Textures:
