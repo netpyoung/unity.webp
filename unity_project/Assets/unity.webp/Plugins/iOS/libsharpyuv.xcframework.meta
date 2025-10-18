@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 5fa34006dcd1f4f77b2f3a087d74b1b6
+guid: 9953034e5e3bb404988928834d63e133
 PluginImporter:
   externalObjects: {}
-  serializedVersion: 2
+  serializedVersion: 3
   iconMap: {}
   executionOrder: {}
   defineConstraints: []
@@ -11,68 +11,50 @@ PluginImporter:
   isExplicitlyReferenced: 0
   validateReferences: 1
   platformData:
-  - first:
-      : Any
-    second:
+    Any:
       enabled: 0
       settings:
-        Exclude Android: 1
         Exclude Editor: 1
         Exclude Linux64: 1
         Exclude OSXUniversal: 1
         Exclude Win: 1
         Exclude Win64: 1
         Exclude iOS: 0
-  - first:
-      Android: Android
-    second:
-      enabled: 0
-      settings:
-        CPU: ARMv7
-  - first:
-      Any: 
-    second:
-      enabled: 0
-      settings: {}
-  - first:
-      Editor: Editor
-    second:
+        Exclude tvOS: 0
+    Editor:
       enabled: 0
       settings:
         CPU: AnyCPU
         DefaultValueInitialized: true
         OS: AnyOS
-  - first:
-      Standalone: Linux64
-    second:
+    Linux64:
       enabled: 0
       settings:
         CPU: None
-  - first:
-      Standalone: OSXUniversal
-    second:
+    OSXUniversal:
       enabled: 0
       settings:
         CPU: None
-  - first:
-      Standalone: Win
-    second:
+    Win:
       enabled: 0
       settings:
         CPU: None
-  - first:
-      Standalone: Win64
-    second:
+    Win64:
       enabled: 0
       settings:
         CPU: None
-  - first:
-      iPhone: iOS
-    second:
+    iOS:
       enabled: 1
       settings:
         AddToEmbeddedBinaries: false
-        CPU: AnyCPU
+        CPU: ARM64, ARM64Simulator
+        CompileFlags: 
+        FrameworkDependencies: 
+    tvOS:
+      enabled: 1
+      settings:
+        AddToEmbeddedBinaries: false
+        CPU: ARM64, ARM64Simulator
         CompileFlags: 
         FrameworkDependencies: 
   userData: 
