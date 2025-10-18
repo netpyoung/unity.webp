@@ -19,7 +19,7 @@ using #{version} for versioning.
   "scopedRegistries": [
     {
       "name": "Unity NuGet",
-      "url": "https://unitynuget-registry.azurewebsites.net",
+      "url": "https://unitynuget-registry.openupm.com",
       "scopes": [
         "org.nuget"
       ]

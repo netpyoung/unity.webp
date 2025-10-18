@@ -49,7 +49,7 @@ Download and install via the [Package Installer](http://package-installer.glitch
   "scopedRegistries": [
     {
       "name": "Unity NuGet",
-      "url": "https://unitynuget-registry.azurewebsites.net",
+      "url": "https://unitynuget-registry.openupm.com",
       "scopes": [
         "org.nuget"
       ]
