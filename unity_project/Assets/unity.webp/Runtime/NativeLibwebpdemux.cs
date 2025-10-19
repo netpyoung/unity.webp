@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using unity.libwebp.Interop;
 
@@ -109,7 +108,9 @@ namespace unity.libwebp
         {
             if (webp_data != null)
             {
-                Unsafe.InitBlockUnaligned(webp_data, 0, (uint)sizeof(WebPData));
+                // NOTE(pyoung): remove dependency: system.runtime.compilerservices
+                // - Unsafe.InitBlockUnaligned(webp_data, 0, (uint)sizeof(WebPData));
+                *webp_data = default;
             }
         }
 
@@ -138,7 +139,9 @@ namespace unity.libwebp
                     return 0;
                 }
 
-                Unsafe.CopyBlockUnaligned((void*)(dst->bytes), src->bytes, (uint)src->size);
+                // NOTE(pyoung): remove dependency: system.runtime.compilerservices
+                // - Unsafe.CopyBlockUnaligned((void*)(dst->bytes), src->bytes, (uint)src->size);
+                Buffer.MemoryCopy(src->bytes, dst->bytes, (long)src->size, (long)src->size);
                 dst->size = src->size;
             }
 
