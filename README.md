@@ -31,8 +31,7 @@ Download and install via the [Package Installer](http://package-installer.glitch
       "name": "OpenUPM",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.netpyoung.webp",
-        "org.nuget.system.runtime.compilerservices.unsafe"
+        "com.netpyoung.webp"
       ]
     }
   ]
@@ -46,15 +45,6 @@ Download and install via the [Package Installer](http://package-installer.glitch
   "dependencies": {
     "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.19"
   },
-  "scopedRegistries": [
-    {
-      "name": "Unity NuGet",
-      "url": "https://unitynuget-registry.openupm.com",
-      "scopes": [
-        "org.nuget"
-      ]
-    }
-  ]
 }
 ```
 
@@ -71,11 +61,6 @@ Download and install via the [Package Installer](http://package-installer.glitch
 - WebGL's [System.Threading.Tasks](https://docs.microsoft.com/dotnet/api/system.threading.tasks.task?view=net-6.0) async based logic is not stable. If you want to use async based logic for WebGL build, try to use [Cysharp/UniTask](https://github.com/Cysharp/UniTask).
   - ref: <https://forum.unity.com/threads/async-await-and-webgl-builds.472994/>
 - For WebGL build, this repo copied [webmproject/libwebp](https://github.com/webmproject/libwebp) directly. It will be more cleanable if it can be support prebuilt. But It needs more investigate.
-
-
-## stop to support .unitypackage
-
-- This library depends on System.Runtime.CompilerServices.Unsafe. But with `package manager` and `.unitypackage` it is hard to maintain both. so I deprecated to support .unitypackage.
 
 ## LICENCE
 
