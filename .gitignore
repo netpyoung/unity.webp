@@ -1,3 +1,4 @@
 # prebuilt-libwebp
 /_lib/
 .DS_Store
+*.unitypackage
