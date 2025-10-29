@@ -48,10 +48,6 @@ Download and install via the [Package Installer](http://package-installer.glitch
 }
 ```
 
-### using .unitypackage
-
-- [Download this .unitypackage from Release Page](https://github.com/netpyoung/unity.webp/releases)
-
 ## Example
 
 - check [Samples/ directory](https://github.com/netpyoung/unity.webp/tree/master/unity_project/Assets/Samples)
