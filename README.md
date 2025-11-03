@@ -4,7 +4,7 @@
 
  This project was based in [octo-code/webp-unity3d](https://github.com/octo-code/webp-unity3d).
 
- I decided that there should be a simpler way and I created **unity.webp**, a plugin that helps you to use [webp](https://developers.google.com/speed/webp/) in your Unity3d projects in a clear and easy way and works in **iOS, Android, Windows, Linux** projects.
+ I decided that there should be a simpler way and I created **unity.webp**, a plugin that helps you to use [webp](https://developers.google.com/speed/webp/) in your Unity3d projects in a clear and easy way and works in **iOS, Android, Windows, Linux, WebGL** projects.
 
 ## prebuilt library
 
@@ -61,6 +61,11 @@ Download and install via the [Package Installer](http://package-installer.glitch
 - WebGL's [System.Threading.Tasks](https://docs.microsoft.com/dotnet/api/system.threading.tasks.task?view=net-6.0) async based logic is not stable. If you want to use async based logic for WebGL build, try to use [Cysharp/UniTask](https://github.com/Cysharp/UniTask).
   - ref: <https://forum.unity.com/threads/async-await-and-webgl-builds.472994/>
 - For WebGL build, this repo copied [webmproject/libwebp](https://github.com/webmproject/libwebp) directly. It will be more cleanable if it can be support prebuilt. But It needs more investigate.
+
+## for WebGL testing
+
+- try to use [caddyserver](https://caddyserver.com/) for static file server
+- and [Caddyfile](./unity_project/Caddyfile)
 
 ## LICENCE
 
