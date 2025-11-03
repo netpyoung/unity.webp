@@ -1,0 +1,44 @@
+:{$http_port:80} {
+    root * ./
+    file_server
+
+	# BROTLI
+    @BROTLI_data_br path *.data.br
+    header @BROTLI_data_br Content-Encoding br
+    header @BROTLI_data_br Content-Type application/octet-stream
+
+    @BROTLI_js_br path *.js.br
+    header @BROTLI_js_br Content-Encoding br
+    header @BROTLI_js_br Content-Type application/javascript
+
+    @BROTLI_wasm_br path *.wasm.br
+    header @BROTLI_wasm_br Content-Encoding br
+    header @BROTLI_wasm_br Content-Type application/wasm
+
+	# GZIP
+    @GZIP_data_gz path *.data.gz
+    header @GZIP_data_gz Content-Encoding gzip
+    header @GZIP_data_gz Content-Type application/octet-stream
+
+    @GZIP_js_gz path *.js.gz
+    header @GZIP_js_gz Content-Encoding gzip
+    header @GZIP_js_gz Content-Type application/javascript
+
+    @GZIP_wasm_gz path *.wasm.gz
+    header @GZIP_wasm_gz Content-Encoding gzip
+    header @GZIP_wasm_gz Content-Type application/wasm
+}
+
+# example command for s3
+#
+# aws s3 cp Build_1.js.gz s3://mybucket/Build_1.js.gz \
+#   --content-encoding gzip \
+#   --content-type application/javascript
+
+# example command caddy - for powershell
+# - https://caddyserver.com/
+#
+# - launch default(80) port
+# > caddy run
+# - launch custom 8080 port
+# > cmd /c "set http_port=8080 && caddy run"
