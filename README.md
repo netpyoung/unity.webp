@@ -24,7 +24,7 @@ Download and install via the [Package Installer](http://package-installer.glitch
 ``` json
 {
   "dependencies": {
-    "com.netpyoung.webp": "0.3.20"
+    "com.netpyoung.webp": "0.3.21"
   },
   "scopedRegistries": [
     {
@@ -43,7 +43,7 @@ Download and install via the [Package Installer](http://package-installer.glitch
 ``` json
 {
   "dependencies": {
-    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.20"
+    "com.netpyoung.webp": "https://github.com/netpyoung/unity.webp.git?path=unity_project/Assets/unity.webp#0.3.21"
   },
 }
 ```
