@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9953034e5e3bb404988928834d63e133
+guid: 1f6241f47a26f4681a0f4db03b5374c8
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -12,32 +12,23 @@ PluginImporter:
   validateReferences: 1
   platformData:
   - first:
-      : 
-    second:
-      enabled: 0
-      settings: {}
-  - first:
       : Any
     second:
       enabled: 0
       settings:
-        Exclude Android: 1
         Exclude Editor: 1
+        Exclude Linux: 1
         Exclude Linux64: 1
+        Exclude LinuxUniversal: 1
         Exclude OSXUniversal: 1
-        Exclude VisionOS: 1
-        Exclude WebGL: 1
         Exclude Win: 1
         Exclude Win64: 1
         Exclude iOS: 0
-        Exclude tvOS: 0
   - first:
-      Android: Android
+      Any: 
     second:
       enabled: 0
-      settings:
-        AndroidSharedLibraryType: Executable
-        CPU: ARMv7
+      settings: {}
   - first:
       Editor: Editor
     second:
@@ -47,54 +38,60 @@ PluginImporter:
         DefaultValueInitialized: true
         OS: AnyOS
   - first:
-      Standalone: Linux64
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
-  - first:
-      Standalone: OSXUniversal
+      Facebook: Win
     second:
       enabled: 0
       settings:
         CPU: None
   - first:
-      Standalone: Win
+      Facebook: Win64
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      Standalone: Linux
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      Standalone: Linux64
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      Standalone: LinuxUniversal
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      Standalone: OSXUniversal
     second:
       enabled: 0
       settings:
         CPU: x86
   - first:
+      Standalone: Win
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
       Standalone: Win64
     second:
       enabled: 0
       settings:
-        CPU: x86_64
-  - first:
-      VisionOS: VisionOS
-    second:
-      enabled: 0
-      settings:
-        AddToEmbeddedBinaries: false
-        CPU: AnyCPU
-        CompileFlags: 
-        FrameworkDependencies: 
+        CPU: None
   - first:
       iPhone: iOS
     second:
       enabled: 1
       settings:
         AddToEmbeddedBinaries: false
-        CPU: AnyCPU
-        CompileFlags: 
-        FrameworkDependencies: 
-  - first:
-      tvOS: tvOS
-    second:
-      enabled: 1
-      settings:
-        AddToEmbeddedBinaries: false
-        CPU: AnyCPU
+        CPU: ARM64
         CompileFlags: 
         FrameworkDependencies: 
   userData: 
