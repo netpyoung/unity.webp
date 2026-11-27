@@ -114,12 +114,8 @@ namespace WebP
                 // If we've been supplied a function to alter the width and height, use that now.
                 scalingFunction?.Invoke(ref lWidth, ref lHeight);
 
-                // If mipmaps are requested we need to create 1/3 more memory for the mipmaps to be generated in.
-                int numBytesRequired = lWidth * lHeight * 4;
-                if (lMipmaps)
-                {
-                    numBytesRequired = Mathf.CeilToInt((numBytesRequired * 4.0f) / 3.0f);
-                }
+                // If mipmaps are requested we need to create more memory for the whole mip chain.
+                int numBytesRequired = GetRequireByteSize(lWidth, lHeight, lMipmaps);
 
                 lRawData = new byte[numBytesRequired];
                 fixed (byte* lRawDataPtr = lRawData)
@@ -371,12 +367,26 @@ namespace WebP
 
         public static int GetRequireByteSize(int width, int height, bool isUseMipmap = false)
         {
-            int numBytesRequired = width * height * 4;
-            if (isUseMipmap)
+            if (!isUseMipmap)
             {
-                numBytesRequired = Mathf.CeilToInt((numBytesRequired * 4.0f) / 3.0f);
+                return width * height * 4;
             }
-            return numBytesRequired;
+
+            // Sum up the exact size of the full mip chain. The "4/3 of the base level" approximation is too small
+            // for non-square textures (the shorter side reaches 1 first while the longer side keeps halving),
+            // which makes LoadRawTextureData fail with "not enough data provided".
+            long numBytesRequired = 0;
+            int w = width;
+            int h = height;
+            while (true)
+            {
+                numBytesRequired += (long)w * h * 4;
+                if (w <= 1 && h <= 1)
+                    break;
+                w = Math.Max(1, w / 2);
+                h = Math.Max(1, h / 2);
+            }
+            return (int)numBytesRequired;
         }
     }
 }
